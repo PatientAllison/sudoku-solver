@@ -1,0 +1,14 @@
+# ─── Kiro local-only files ────────────────────────────────────────────────────
+# Spec config and steering docs are personal/local — not for the remote repo
+.kiro/
+
+# ─── TypeScript / Node ────────────────────────────────────────────────────────
+node_modules/
+typescript/dist/
+typescript/coverage/
+
+# ─── OS / editor ──────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
