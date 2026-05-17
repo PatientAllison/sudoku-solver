@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { Cell } from '../src/cell.js';
+import { Cell } from '../../src/primitives/cell.js';
 
 const mockIsSquare = vi.hoisted(() => vi.fn());
 
-vi.mock('../src/utils.js', () => {
+vi.mock('../../src/utils.js', () => {
   return {
     isSquarePositiveInteger: mockIsSquare,
   };
@@ -11,16 +11,17 @@ vi.mock('../src/utils.js', () => {
 
 describe('Cell', () => {
   let cell: Cell;
-  const col = 0;
-  const row = 1;
+  const coordinates = {
+    row: 0,
+    col: 1,
+  };
   const unitSize = 9;
   const givenValue = 5;
   mockIsSquare.mockReturnValue(true);
 
   beforeEach(() => {
     cell = new Cell({
-      col,
-      row,
+      coordinates,
       unitSize,
     });
   });
@@ -32,8 +33,7 @@ describe('Cell', () => {
         expectedCandidates.add(i);
       }
 
-      expect(cell.col).toEqual(col);
-      expect(cell.row).toEqual(row);
+      expect(cell.coordinates).toEqual(coordinates);
       expect(cell.isGiven).toEqual(false);
       expect(cell.getCandidates()).toEqual(expectedCandidates);
       expect(cell.getValue()).toBeUndefined();
@@ -41,14 +41,12 @@ describe('Cell', () => {
 
     test('Variables are accessible when a value is given', () => {
       cell = new Cell({
-        col,
-        row,
+        coordinates,
         unitSize,
         givenValue,
       });
 
-      expect(cell.col).toEqual(col);
-      expect(cell.row).toEqual(row);
+      expect(cell.coordinates).toEqual(coordinates);
       expect(cell.isGiven).toEqual(true);
       expect(cell.getCandidates()).toEqual(new Set([givenValue]));
       expect(cell.getValue()).toEqual(givenValue);
@@ -62,8 +60,7 @@ describe('Cell', () => {
       expect(
         () =>
           new Cell({
-            col: 0,
-            row: 1,
+            coordinates,
             unitSize: 10,
           })
       ).toThrow('Unit size must be a square postitive integer!');
@@ -73,8 +70,10 @@ describe('Cell', () => {
       expect(
         () =>
           new Cell({
-            col: 9,
-            row: 1,
+            coordinates: {
+              col: 9,
+              row: 0,
+            },
             unitSize: 9,
           })
       ).toThrow('Column is greater than or equal to unit size!');
@@ -84,8 +83,10 @@ describe('Cell', () => {
       expect(
         () =>
           new Cell({
-            col: 0,
-            row: 10,
+            coordinates: {
+              col: 0,
+              row: 10,
+            },
             unitSize: 9,
           })
       ).toThrow('Row is greater than or equal to unit size!');
@@ -105,8 +106,7 @@ describe('Cell', () => {
   describe('setValue', () => {
     test('Attempting to set value for a cell with a different value throws an error', () => {
       cell = new Cell({
-        col,
-        row,
+        coordinates,
         unitSize,
         givenValue,
       });
@@ -129,8 +129,7 @@ describe('Cell', () => {
       const expectedCandidates = new Set([givenValue]);
 
       cell = new Cell({
-        col,
-        row,
+        coordinates,
         unitSize,
         givenValue,
       });
@@ -152,8 +151,7 @@ describe('Cell', () => {
       const expectedCandidates = new Set([givenValue]);
 
       cell = new Cell({
-        col,
-        row,
+        coordinates,
         unitSize,
         givenValue,
       });

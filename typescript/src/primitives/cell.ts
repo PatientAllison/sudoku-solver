@@ -1,17 +1,15 @@
-import { isSquarePositiveInteger } from './utils.js';
+import { Coordinates } from '../types.js';
+import { isSquarePositiveInteger } from '../utils.js';
 
 export interface CellParams {
-  col: number;
-  row: number;
+  coordinates: Coordinates;
   unitSize: number;
   givenValue?: number;
 }
 
 export class Cell {
-  // Column of the Cell within the Board
-  readonly col: number;
-  // Row of the Cell within the Board
-  readonly row: number;
+  // Coordinates of the Cell within the Board
+  readonly coordinates: Coordinates;
   // Whether a value was given at construction time
   readonly isGiven: boolean;
   // Size of a unit for the board (used in calculating candidates and cloning)
@@ -30,20 +28,19 @@ export class Cell {
    */
   constructor(params: CellParams) {
     // Destructure input
-    const { col, row, unitSize, givenValue } = params;
+    const { coordinates, unitSize, givenValue } = params;
 
     // Validations
     if (!isSquarePositiveInteger(unitSize)) {
       throw new Error('Unit size must be a square postitive integer!');
-    } else if (col >= unitSize) {
+    } else if (coordinates.col >= unitSize) {
       throw new Error('Column is greater than or equal to unit size!');
-    } else if (row >= unitSize) {
+    } else if (coordinates.row >= unitSize) {
       throw new Error('Row is greater than or equal to unit size!');
     }
 
     // Set Coords and unitSize
-    this.col = col;
-    this.row = row;
+    this.coordinates = coordinates;
     this.unitSize = unitSize;
 
     if (givenValue !== undefined) {
@@ -96,8 +93,8 @@ export class Cell {
     if (this.value !== undefined && this.value !== value) {
       throw new Error(
         'This cell already has a different value!' +
-          `Row: ${this.row}, ` +
-          `Col: ${this.col}, ` +
+          `Row: ${this.coordinates.row}, ` +
+          `Col: ${this.coordinates.col}, ` +
           `Existing Value: ${this.value}, ` +
           `Your Value: ${value} ` +
           `isGiven: ${this.isGiven}`
@@ -116,8 +113,10 @@ export class Cell {
    */
   clone() {
     const cloned = new Cell({
-      row: this.row,
-      col: this.col,
+      coordinates: {
+        col: this.coordinates.col,
+        row: this.coordinates.row,
+      },
       unitSize: this.unitSize,
       givenValue: this.isGiven ? this.value : undefined,
     });
