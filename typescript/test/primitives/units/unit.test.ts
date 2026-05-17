@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { Coordinates, UnitType } from '../../src/types';
-import { Unit } from '../../src/primitives/units/unit';
+import { Coordinates, UnitType } from '../../../src/types';
+import { Unit } from '../../../src/primitives/units/unit';
+import { validBox, validColumn, validRow } from '../../fixtures';
 
 const mockIsSquare = vi.hoisted(() => vi.fn());
 
@@ -9,42 +10,6 @@ vi.mock('../../src/utils.js', () => {
     isSquarePositiveInteger: mockIsSquare,
   };
 });
-
-const validRow: Coordinates[] = [
-  { col: 0, row: 0 },
-  { col: 1, row: 0 },
-  { col: 2, row: 0 },
-  { col: 3, row: 0 },
-  { col: 4, row: 0 },
-  { col: 5, row: 0 },
-  { col: 6, row: 0 },
-  { col: 7, row: 0 },
-  { col: 8, row: 0 },
-];
-
-const validColumn: Coordinates[] = [
-  { col: 0, row: 0 },
-  { col: 0, row: 1 },
-  { col: 0, row: 2 },
-  { col: 0, row: 3 },
-  { col: 0, row: 4 },
-  { col: 0, row: 5 },
-  { col: 0, row: 6 },
-  { col: 0, row: 7 },
-  { col: 0, row: 8 },
-];
-
-const validBox: Coordinates[] = [
-  { col: 0, row: 0 },
-  { col: 1, row: 0 },
-  { col: 2, row: 0 },
-  { col: 0, row: 1 },
-  { col: 1, row: 1 },
-  { col: 2, row: 1 },
-  { col: 0, row: 2 },
-  { col: 1, row: 2 },
-  { col: 2, row: 2 },
-];
 
 describe('Unit (constructor validation)', () => {
   afterEach(() => {
@@ -57,8 +22,11 @@ describe('Unit (constructor validation)', () => {
     });
 
     test('Valid row, pre-sorted', () => {
-      const row = new Unit({ unitType: UnitType.Row, cellCoords: validRow });
-      // constructor didn't throw, check coordinates
+      const unitType = UnitType.Row;
+
+      const row = new Unit({ unitType, cellCoords: validRow });
+      // constructor didn't throw, check properties
+      expect(row.unitType).toEqual(unitType);
       for (let i = 0; i < row.cellCoords.length; i++) {
         expect(row.cellCoords[i]).toEqual(validRow[i]);
       }
@@ -66,11 +34,14 @@ describe('Unit (constructor validation)', () => {
     });
 
     test('Valid row, shuffled', () => {
+      const unitType = UnitType.Row;
+
       const row = new Unit({
-        unitType: UnitType.Row,
+        unitType,
         cellCoords: shuffleCells(validRow),
       });
-      // constructor didn't throw, check coordinates
+      // constructor didn't throw, check properties
+      expect(row.unitType).toEqual(unitType);
       for (let i = 0; i < row.cellCoords.length; i++) {
         expect(row.cellCoords[i]).toEqual(validRow[i]);
       }
@@ -78,11 +49,14 @@ describe('Unit (constructor validation)', () => {
     });
 
     test('Valid column, pre-sorted', () => {
+      const unitType = UnitType.Column;
+
       const column = new Unit({
-        unitType: UnitType.Column,
+        unitType,
         cellCoords: validColumn,
       });
-      // constructor didn't throw, check coordinates
+      // constructor didn't throw, check properties
+      expect(column.unitType).toEqual(unitType);
       for (let i = 0; i < column.cellCoords.length; i++) {
         expect(column.cellCoords[i]).toEqual(validColumn[i]);
       }
@@ -90,11 +64,14 @@ describe('Unit (constructor validation)', () => {
     });
 
     test('Valid column, shuffled', () => {
+      const unitType = UnitType.Column;
+
       const column = new Unit({
-        unitType: UnitType.Column,
+        unitType,
         cellCoords: shuffleCells(validColumn),
       });
-      // constructor didn't throw, check coordinates
+      // constructor didn't throw, check properties
+      expect(column.unitType).toEqual(unitType);
       for (let i = 0; i < column.cellCoords.length; i++) {
         expect(column.cellCoords[i]).toEqual(validColumn[i]);
       }
@@ -102,8 +79,11 @@ describe('Unit (constructor validation)', () => {
     });
 
     test('Valid box, pre-sorted', () => {
-      const box = new Unit({ unitType: UnitType.Box, cellCoords: validBox });
-      // constructor didn't throw, check coordinates
+      const unitType = UnitType.Box;
+
+      const box = new Unit({ unitType, cellCoords: validBox });
+      // constructor didn't throw, check properties
+      expect(box.unitType).toEqual(unitType);
       for (let i = 0; i < box.cellCoords.length; i++) {
         expect(box.cellCoords[i]).toEqual(validBox[i]);
       }
@@ -111,11 +91,14 @@ describe('Unit (constructor validation)', () => {
     });
 
     test('Valid box, shuffled', () => {
+      const unitType = UnitType.Box;
+
       const box = new Unit({
-        unitType: UnitType.Box,
+        unitType,
         cellCoords: shuffleCells(validBox),
       });
-      // constructor didn't throw, check coordinates
+      // constructor didn't throw, check properties
+      expect(box.unitType).toEqual(unitType);
       for (let i = 0; i < box.cellCoords.length; i++) {
         expect(box.cellCoords[i]).toEqual(validBox[i]);
       }
