@@ -1,11 +1,17 @@
 import { Coordinates, UnitType } from '../../types.js';
 import { isSquarePositiveInteger } from '../../utils.js';
 
+/**
+ * Params for constructing a unit
+ */
 export interface UnitParams {
   unitType: UnitType;
   cellCoords: Coordinates[];
 }
 
+/**
+ * Unit class representing either a Row, Column, or Box
+ */
 export class Unit {
   // Type of the Unit, row, column, or box
   readonly unitType: UnitType;
@@ -14,6 +20,11 @@ export class Unit {
   // Index of the top left cell in the unit for easy access
   readonly topLeftIndex: Coordinates;
 
+  /**
+   * Creates a Unit, performing appropriate validations for each unit type along the way
+   * @param params unitType, cellCoords
+   * @throws if the Unit is invalid somehow
+   */
   constructor(params: UnitParams) {
     const { unitType, cellCoords } = params;
 
@@ -52,6 +63,16 @@ export class Unit {
     this.topLeftIndex = this.cellCoords[0]!;
   }
 
+  /**
+   * Perform validations on the cells of a row or column
+   * @param unitType Row or Column, used for printing error messages
+   * @param unitSize Width of a row or Height of a column
+   * @param shouldBeSame The coordinates that should be the same for a given unitType,
+   * row for row, col for column
+   * @param shouldBeDifferent The coordinates that should be the same for a given unitType,
+   * col for row, row for column
+   * @throws if the row or column is invalid somehow
+   */
   private validateRowColCoords(
     unitType: UnitType,
     unitSize: number,
@@ -107,6 +128,13 @@ export class Unit {
     }
   }
 
+  /**
+   * Perform validation on the cells of a box.
+   * Also returns the box cells sorted as this is performed as part of the validation.
+   * @param cellCoords Cell coordinates to validate
+   * @returns Valid, sorted box
+   * @throws if the box is invalid somehow
+   */
   private validateAndSortBoxCoords(cellCoords: Coordinates[]) {
     // Validate all coords are unique
     const seen = new Set<string>();

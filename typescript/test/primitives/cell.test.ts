@@ -2,10 +2,12 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { Cell } from '../../src/primitives/cell.js';
 
 const mockIsSquare = vi.hoisted(() => vi.fn());
+const mockIsPositive = vi.hoisted(() => vi.fn());
 
 vi.mock('../../src/utils.js', () => {
   return {
     isSquarePositiveInteger: mockIsSquare,
+    isPositiveInteger: mockIsPositive,
   };
 });
 
@@ -18,6 +20,7 @@ describe('Cell', () => {
   const unitSize = 9;
   const givenValue = 5;
   mockIsSquare.mockReturnValue(true);
+  mockIsPositive.mockReturnValue(true);
 
   beforeEach(() => {
     cell = new Cell({
@@ -63,7 +66,7 @@ describe('Cell', () => {
             coordinates,
             unitSize: 10,
           })
-      ).toThrow('Unit size must be a square postitive integer!');
+      ).toThrow(/Unit size must be a square postitive integer!/);
     });
 
     test('Column out of bounds throws an error', () => {
@@ -76,7 +79,7 @@ describe('Cell', () => {
             },
             unitSize: 9,
           })
-      ).toThrow('Column is greater than or equal to unit size!');
+      ).toThrow(/Column is greater than or equal to unit size!/);
     });
 
     test('Row out of bounds throws an error', () => {
@@ -90,6 +93,30 @@ describe('Cell', () => {
             unitSize: 9,
           })
       ).toThrow('Row is greater than or equal to unit size!');
+    });
+
+    test('Given non-positive value throws an error', () => {
+      mockIsPositive.mockReturnValueOnce(false);
+
+      expect(
+        () =>
+          new Cell({
+            coordinates,
+            unitSize: 9,
+            givenValue: -0.5,
+          })
+      ).toThrow(/Cannot set a value that is not a positive integer!/);
+    });
+
+    test('Given value too large throws an error', () => {
+      expect(
+        () =>
+          new Cell({
+            coordinates,
+            unitSize: 9,
+            givenValue: 10,
+          })
+      ).toThrow(/Cannot set a value larger than the unit size!/);
     });
   });
 
@@ -116,7 +143,28 @@ describe('Cell', () => {
       );
     });
 
-    test('Set value if value is not already set', () => {
+    test('Attempting to set non-positive value throws an error', () => {
+      mockIsPositive.mockReturnValueOnce(false);
+      expect(() => cell.setValue(-0.5)).toThrow(
+        /Cannot set a value that is not a positive integer!/
+      );
+    });
+
+    test('Attempting to set a value larger than the unit size throws an error', () => {
+      expect(() => cell.setValue(10)).toThrow(
+        /Cannot set a value larger than the unit size!/
+      );
+    });
+
+    test('Attempting to set a value not in the candidates list throws an error', () => {
+      const valueToSet = 3;
+      cell.removeCandidate(valueToSet);
+      expect(() => cell.setValue(valueToSet)).toThrow(
+        /Cannot set a value that is not a valid candidate for the cell!/
+      );
+    });
+
+    test('Set value if value is valid and not already set', () => {
       const valueToSet = 4;
       const expectedCandidates = new Set([valueToSet]);
 
@@ -125,7 +173,7 @@ describe('Cell', () => {
       expect(cell.getCandidates()).toEqual(expectedCandidates);
     });
 
-    test('setValue is no-op if attempting to set the same value', () => {
+    test('setValue is no-op if attempting to set the same valid value', () => {
       const expectedCandidates = new Set([givenValue]);
 
       cell = new Cell({

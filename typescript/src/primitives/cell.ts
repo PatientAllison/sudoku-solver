@@ -1,12 +1,18 @@
 import { Coordinates } from '../types.js';
-import { isSquarePositiveInteger } from '../utils.js';
+import { isPositiveInteger, isSquarePositiveInteger } from '../utils.js';
 
+/**
+ * Params for creating a cell
+ */
 export interface CellParams {
   coordinates: Coordinates;
   unitSize: number;
   givenValue?: number;
 }
 
+/**
+ * The core structure around which a sudoku puzzle is based
+ */
 export class Cell {
   // Coordinates of the Cell within the Board
   readonly coordinates: Coordinates;
@@ -15,7 +21,7 @@ export class Cell {
   // Size of a unit for the board (used in calculating candidates and cloning)
   private readonly unitSize: number;
   // Candidates for the cell's value
-  private candidates: Set<number>;
+  private candidates!: Set<number>;
   // The cell's final value
   private value?: number;
 
@@ -25,6 +31,7 @@ export class Cell {
    * @param row Row of cell
    * @param unitSize Unit size for the whole board (used in calculating candidates)
    * @param givenValue Optional, used only when parsing initial input for the board
+   * @param throws if cell is invalid somehow
    */
   constructor(params: CellParams) {
     // Destructure input
@@ -41,7 +48,7 @@ export class Cell {
       );
     } else if (coordinates.row >= unitSize) {
       throw new Error(
-        `Row is greater than or equal to unit size! Row: ${coordinates.col}, Unit size: ${unitSize}`
+        `Row is greater than or equal to unit size! Row: ${coordinates.row}, Unit size: ${unitSize}`
       );
     }
 
@@ -52,8 +59,7 @@ export class Cell {
     if (givenValue !== undefined) {
       // Set appropriate values if givenValue is defined
       this.isGiven = true;
-      this.value = givenValue;
-      this.candidates = new Set([givenValue]);
+      this.setValue(givenValue);
     } else {
       // Add all possible candidates if givenValue is undefined
       this.isGiven = false;
@@ -105,8 +111,31 @@ export class Cell {
           `Your Value: ${value} ` +
           `isGiven: ${this.isGiven}`
       );
-      // Set value if existing value is undefined
     } else if (this.value === undefined) {
+      // Validations
+      if (!isPositiveInteger(value)) {
+        throw new Error(
+          'Cannot set a value that is not a positive integer! ' +
+            `Your Value: ${value}`
+        );
+      }
+
+      if (value > this.unitSize) {
+        throw new Error(
+          'Cannot set a value larger than the unit size! ' +
+            `Unit Size: ${this.unitSize} ` +
+            `Your Value: ${value}`
+        );
+      }
+
+      if (this.candidates !== undefined && !this.candidates.has(value)) {
+        throw new Error(
+          'Cannot set a value that is not a valid candidate for the cell! ' +
+            `Candidates: ${Array.from(this.candidates).join(', ')} ` +
+            `Your Value: ${value}`
+        );
+      }
+      // All validations passed. Set the value if existing value is undefined
       this.value = value;
       this.candidates = new Set([value]);
     }
