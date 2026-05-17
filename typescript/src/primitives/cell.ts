@@ -32,11 +32,17 @@ export class Cell {
 
     // Validations
     if (!isSquarePositiveInteger(unitSize)) {
-      throw new Error('Unit size must be a square postitive integer!');
+      throw new Error(
+        `Unit size must be a square postitive integer! Unit size: ${unitSize}`
+      );
     } else if (coordinates.col >= unitSize) {
-      throw new Error('Column is greater than or equal to unit size!');
+      throw new Error(
+        `Column is greater than or equal to unit size! Column: ${coordinates.col}, Unit size: ${unitSize}`
+      );
     } else if (coordinates.row >= unitSize) {
-      throw new Error('Row is greater than or equal to unit size!');
+      throw new Error(
+        `Row is greater than or equal to unit size! Row: ${coordinates.col}, Unit size: ${unitSize}`
+      );
     }
 
     // Set Coords and unitSize
