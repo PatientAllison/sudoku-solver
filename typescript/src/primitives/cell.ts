@@ -8,6 +8,8 @@ export interface CellParams {
   coordinates: Coordinates;
   unitSize: number;
   givenValue?: number;
+  // Use for tests only
+  skipValidations?: boolean;
 }
 
 /**
@@ -24,32 +26,36 @@ export class Cell {
   private candidates!: Set<number>;
   // The cell's final value
   private value?: number;
+  private readonly skipValidations?: boolean;
 
   /**
    * Creates a cell object.
-   * @param col Column of cell
-   * @param row Row of cell
+   * @param coordinates Coordinates of the cell within the board
    * @param unitSize Unit size for the whole board (used in calculating candidates)
    * @param givenValue Optional, used only when parsing initial input for the board
    * @param throws if cell is invalid somehow
    */
   constructor(params: CellParams) {
     // Destructure input
-    const { coordinates, unitSize, givenValue } = params;
+    const { coordinates, unitSize, givenValue, skipValidations } = params;
+
+    this.skipValidations = skipValidations;
 
     // Validations
-    if (!isSquarePositiveInteger(unitSize)) {
-      throw new Error(
-        `Unit size must be a square postitive integer! Unit size: ${unitSize}`
-      );
-    } else if (coordinates.col >= unitSize) {
-      throw new Error(
-        `Column is greater than or equal to unit size! Column: ${coordinates.col}, Unit size: ${unitSize}`
-      );
-    } else if (coordinates.row >= unitSize) {
-      throw new Error(
-        `Row is greater than or equal to unit size! Row: ${coordinates.row}, Unit size: ${unitSize}`
-      );
+    if (!this.skipValidations) {
+      if (!isSquarePositiveInteger(unitSize)) {
+        throw new Error(
+          `Unit size must be a square postitive integer! Unit size: ${unitSize}`
+        );
+      } else if (coordinates.col >= unitSize) {
+        throw new Error(
+          `Column is greater than or equal to unit size! Column: ${coordinates.col}, Unit size: ${unitSize}`
+        );
+      } else if (coordinates.row >= unitSize) {
+        throw new Error(
+          `Row is greater than or equal to unit size! Row: ${coordinates.row}, Unit size: ${unitSize}`
+        );
+      }
     }
 
     // Set Coords and unitSize
@@ -102,7 +108,11 @@ export class Cell {
    */
   setValue(value: number) {
     // Invariant check: Do not allow setting a value for a cell that already has a different one
-    if (this.value !== undefined && this.value !== value) {
+    if (
+      this.value !== undefined &&
+      this.value !== value &&
+      !this.skipValidations
+    ) {
       throw new Error(
         'This cell already has a different value!' +
           `Row: ${this.coordinates.row}, ` +
@@ -113,27 +123,29 @@ export class Cell {
       );
     } else if (this.value === undefined) {
       // Validations
-      if (!isPositiveInteger(value)) {
-        throw new Error(
-          'Cannot set a value that is not a positive integer! ' +
-            `Your Value: ${value}`
-        );
-      }
+      if (!this.skipValidations) {
+        if (!isPositiveInteger(value)) {
+          throw new Error(
+            'Cannot set a value that is not a positive integer! ' +
+              `Your Value: ${value}`
+          );
+        }
 
-      if (value > this.unitSize) {
-        throw new Error(
-          'Cannot set a value larger than the unit size! ' +
-            `Unit Size: ${this.unitSize} ` +
-            `Your Value: ${value}`
-        );
-      }
+        if (value > this.unitSize) {
+          throw new Error(
+            'Cannot set a value larger than the unit size! ' +
+              `Unit Size: ${this.unitSize} ` +
+              `Your Value: ${value}`
+          );
+        }
 
-      if (this.candidates !== undefined && !this.candidates.has(value)) {
-        throw new Error(
-          'Cannot set a value that is not a valid candidate for the cell! ' +
-            `Candidates: ${Array.from(this.candidates).join(', ')} ` +
-            `Your Value: ${value}`
-        );
+        if (this.candidates !== undefined && !this.candidates.has(value)) {
+          throw new Error(
+            'Cannot set a value that is not a valid candidate for the cell! ' +
+              `Candidates: ${Array.from(this.candidates).join(', ')} ` +
+              `Your Value: ${value}`
+          );
+        }
       }
       // All validations passed. Set the value if existing value is undefined
       this.value = value;
@@ -154,6 +166,7 @@ export class Cell {
       },
       unitSize: this.unitSize,
       givenValue: this.isGiven ? this.value : undefined,
+      skipValidations: this.skipValidations,
     });
 
     if (this.value !== undefined && !this.isGiven) {

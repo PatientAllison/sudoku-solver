@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { Cell } from '../../src/primitives/cell.js';
 
 const mockIsSquare = vi.hoisted(() => vi.fn());
@@ -19,14 +19,18 @@ describe('Cell', () => {
   };
   const unitSize = 9;
   const givenValue = 5;
-  mockIsSquare.mockReturnValue(true);
-  mockIsPositive.mockReturnValue(true);
 
   beforeEach(() => {
+    mockIsSquare.mockReturnValue(true);
+    mockIsPositive.mockReturnValue(true);
     cell = new Cell({
       coordinates,
       unitSize,
     });
+  });
+
+  afterEach(() => {
+    vi.resetAllMocks();
   });
 
   describe('Basic variable access', () => {
@@ -120,6 +124,75 @@ describe('Cell', () => {
     });
   });
 
+  describe('skip validations', () => {
+    test('Non-square unit size does not throw an error', () => {
+      mockIsSquare.mockReturnValueOnce(false);
+
+      expect(
+        () =>
+          new Cell({
+            coordinates,
+            unitSize: 10,
+            skipValidations: true,
+          })
+      ).not.toThrow();
+    });
+
+    test('Column out of bounds does not throw an error', () => {
+      expect(
+        () =>
+          new Cell({
+            coordinates: {
+              col: 9,
+              row: 0,
+            },
+            unitSize: 9,
+            skipValidations: true,
+          })
+      ).not.toThrow();
+    });
+
+    test('Row out of bounds does not throw an error', () => {
+      expect(
+        () =>
+          new Cell({
+            coordinates: {
+              col: 0,
+              row: 10,
+            },
+            unitSize: 9,
+            skipValidations: true,
+          })
+      ).not.toThrow();
+    });
+
+    test('Given non-positive value does not throw an error', () => {
+      mockIsPositive.mockReturnValueOnce(false);
+
+      expect(
+        () =>
+          new Cell({
+            coordinates,
+            unitSize: 9,
+            givenValue: -0.5,
+            skipValidations: true,
+          })
+      ).not.toThrow();
+    });
+
+    test('Given value too large does not throw an error', () => {
+      expect(
+        () =>
+          new Cell({
+            coordinates,
+            unitSize: 9,
+            givenValue: 10,
+            skipValidations: true,
+          })
+      ).not.toThrow();
+    });
+  });
+
   describe('removeCandidate', () => {
     test('Candidate is removed from candidate set', () => {
       const valueToRemove = 5;
@@ -132,6 +205,7 @@ describe('Cell', () => {
 
   describe('setValue', () => {
     test('Attempting to set value for a cell with a different value throws an error', () => {
+      mockIsPositive.mockReturnValue(true);
       cell = new Cell({
         coordinates,
         unitSize,
@@ -143,11 +217,33 @@ describe('Cell', () => {
       );
     });
 
+    test('Attempting to set value for a cell with a different value does not throw an error with skipValidations on', () => {
+      cell = new Cell({
+        coordinates,
+        unitSize,
+        givenValue,
+        skipValidations: true,
+      });
+
+      expect(() => cell.setValue(4)).not.toThrow();
+    });
+
     test('Attempting to set non-positive value throws an error', () => {
       mockIsPositive.mockReturnValueOnce(false);
       expect(() => cell.setValue(-0.5)).toThrow(
         /Cannot set a value that is not a positive integer!/
       );
+    });
+
+    test('Attempting to set non-positive value throws an error does not throw an error with skipValidations on', () => {
+      cell = new Cell({
+        coordinates,
+        unitSize,
+        givenValue,
+        skipValidations: true,
+      });
+
+      expect(() => cell.setValue(-0.5)).not.toThrow();
     });
 
     test('Attempting to set a value larger than the unit size throws an error', () => {
@@ -156,12 +252,35 @@ describe('Cell', () => {
       );
     });
 
+    test('Attempting to set a value larger than the unit size does not throw an error with skipValidations on', () => {
+      cell = new Cell({
+        coordinates,
+        unitSize,
+        givenValue,
+        skipValidations: true,
+      });
+      expect(() => cell.setValue(10)).not.toThrow();
+    });
+
     test('Attempting to set a value not in the candidates list throws an error', () => {
       const valueToSet = 3;
       cell.removeCandidate(valueToSet);
       expect(() => cell.setValue(valueToSet)).toThrow(
         /Cannot set a value that is not a valid candidate for the cell!/
       );
+    });
+
+    test('Attempting to set a value not in the candidates list does not throw an error with skipValidations on', () => {
+      cell = new Cell({
+        coordinates,
+        unitSize,
+        givenValue,
+        skipValidations: true,
+      });
+
+      const valueToSet = 3;
+      cell.removeCandidate(valueToSet);
+      expect(() => cell.setValue(valueToSet)).not.toThrow();
     });
 
     test('Set value if value is valid and not already set', () => {
