@@ -124,4 +124,8 @@ export class Board {
   public getBoxes() {
     return this.units.filter((unit) => unit.unitType === UnitType.Box) as Box[];
   }
+
+  public getCellsForUnit(unit: Unit) {
+    return unit.cellCoords.map(coord => this.cells[coord.row]![coord.col]);
+  }
 }

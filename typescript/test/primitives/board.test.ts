@@ -6,6 +6,7 @@ import {
   nonSquareBoard,
 } from '../fixtures';
 import { Board } from '../../src/primitives/board';
+import { Cell } from '../../src/primitives/cell';
 
 const mockIsSquare = vi.hoisted(() => vi.fn());
 
@@ -18,8 +19,11 @@ vi.mock('../../src/utils', async () => {
   };
 });
 describe('Board', () => {
+  let validCells: Cell[][]
+
   beforeEach(() => {
     mockIsSquare.mockReturnValue(true);
+    validCells = buildCells(validBoard);
   });
 
   afterEach(() => {
@@ -28,22 +32,21 @@ describe('Board', () => {
 
   describe('Board creation', () => {
     test('Valid board', () => {
-      const cells = buildCells(validBoard);
-      const board = new Board({ cells });
-      expect(board.boxEdgeSize).toEqual(Math.sqrt(cells.length));
-      expect(board.unitSize).toEqual(cells.length);
-      expect(board.totalBoardSize).toEqual(cells.length * cells[0].length);
-      expect(board.cells).toEqual(cells);
+      const board = new Board({ cells: validCells });
+      expect(board.boxEdgeSize).toEqual(Math.sqrt(validCells.length));
+      expect(board.unitSize).toEqual(validCells.length);
+      expect(board.totalBoardSize).toEqual(validCells.length * validCells[0].length);
+      expect(board.cells).toEqual(validCells);
       // Unit assertions
-      expect(board.units.length).toEqual(cells.length * 3);
+      expect(board.units.length).toEqual(validCells.length * 3);
       const rows = board.getRows();
       const cols = board.getColumns();
       const boxes = board.getBoxes();
       for (const filteredUnits of [rows, cols, boxes]) {
-        expect(filteredUnits.length).toEqual(cells.length);
+        expect(filteredUnits.length).toEqual(validCells.length);
       }
       board.units.forEach((unit) =>
-        expect(unit.cellCoords.length).toEqual(cells.length)
+        expect(unit.cellCoords.length).toEqual(validCells.length)
       );
 
       const cellCounts = new Map<string, number>();
@@ -84,10 +87,8 @@ describe('Board', () => {
   });
 
   describe('clone', () => {
-    const cells = buildCells(validBoard);
-
     test('Clone should be identical to original after creation', () => {
-      const board = new Board({ cells });
+      const board = new Board({ cells: validCells });
       const clone = board.clone();
       expect(clone.boxEdgeSize).toEqual(board.boxEdgeSize);
       expect(clone.unitSize).toEqual(board.unitSize);
@@ -101,17 +102,31 @@ describe('Board', () => {
     });
 
     test('clone operations do not affect original', () => {
-      const board = new Board({ cells });
+      const board = new Board({ cells: validCells });
       const clone = board.clone();
       clone.cells[0][0].setValue(3);
       expect(board.cells[0][0].getValue()).not.toEqual(3);
     });
 
     test('operations on original do not affect clone', () => {
-      const board = new Board({ cells });
+      const board = new Board({ cells: validCells });
       const clone = board.clone();
       board.cells[0][0].setValue(3);
       expect(clone.cells[0][0].getValue()).not.toEqual(3);
+    });
+  });
+
+  describe('getCellsForUnit', () => {
+    test('getCellsForUnit returns accurate cells', () => {
+      const board = new Board({ cells: validCells });
+      const units = board.units;
+      units.forEach(unit => {
+        const cellsForUnit = board.getCellsForUnit(unit);
+        const coordsForUnit = unit.cellCoords;
+        for (let i = 0; i < cellsForUnit.length; i++) {
+          expect(coordsForUnit[i]).toEqual(cellsForUnit[i].coordinates);
+        }
+      });
     });
   });
 });
