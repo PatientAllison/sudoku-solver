@@ -227,4 +227,20 @@ export class Unit {
     // We already did this as part of validation, no need to do it again in constructor
     return sortedCells;
   }
+
+  public toString() {
+    const unitTypeString = `UnitType: ${this.unitType}`;
+
+    const rowString =
+      this.unitType !== UnitType.Column
+        ? `, Row: ${this.topLeftIndex.row}`
+        : '';
+
+    const colString =
+      this.unitType !== UnitType.Row
+        ? `, Column: ${this.topLeftIndex.col}`
+        : '';
+
+    return `{ ${unitTypeString}${rowString}${colString} }`;
+  }
 }

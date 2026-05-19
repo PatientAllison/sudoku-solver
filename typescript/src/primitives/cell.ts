@@ -176,4 +176,17 @@ export class Cell {
     cloned.candidates = new Set(this.getCandidates());
     return cloned;
   }
+
+  /**
+   * Prints cell coordinates and value to JSON-like syntax for ease of reading in error messages
+   */
+  toString() {
+    return (
+      '{ ' +
+      `Row: ${this.coordinates.row}, ` +
+      `Column: ${this.coordinates.col}, ` +
+      `Value: ${this.value ?? 0} ` +
+      '}'
+    );
+  }
 }

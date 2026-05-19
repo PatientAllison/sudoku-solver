@@ -125,7 +125,50 @@ export class Board {
     return this.units.filter((unit) => unit.unitType === UnitType.Box) as Box[];
   }
 
+  public validate() {
+    const violations = new Map<Unit, Cell[]>();
+
+    this.units.forEach((unit) => {
+      const cells = this.getCellsForUnit(unit);
+
+      const duplicatesMap = new Map<number, Cell[]>();
+      cells.forEach((cell) => {
+        const value = cell.getValue();
+        if (value === undefined) {
+          return;
+        }
+        const coordinatesWithValue: Cell[] = duplicatesMap.get(value) ?? [];
+        coordinatesWithValue.push(cell);
+        duplicatesMap.set(value, coordinatesWithValue);
+      });
+
+      duplicatesMap.values().forEach((cells) => {
+        if (cells.length > 1) {
+          violations.set(unit, cells);
+        }
+      });
+    });
+
+    if (violations.size > 0) {
+      const stringifiedViolations = Array.from(
+        violations.entries().map((entry) => {
+          const stringifiedUnit = entry[0].toString();
+
+          const stringifiedCells = entry[1]
+            .map((cell) => cell.toString())
+            .join(', ');
+
+          return `{ Violated Unit: ${stringifiedUnit}, Violated Cells: ${stringifiedCells} }`;
+        })
+      );
+
+      throw new Error(
+        `Board is invalid! Violations: [ ${stringifiedViolations.join(', ')} ]`
+      );
+    }
+  }
+
   public getCellsForUnit(unit: Unit) {
-    return unit.cellCoords.map(coord => this.cells[coord.row]![coord.col]);
+    return unit.cellCoords.map((coord) => this.cells[coord.row]![coord.col]!);
   }
 }

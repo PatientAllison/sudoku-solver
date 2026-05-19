@@ -405,6 +405,26 @@ describe('Unit (constructor validation)', () => {
         );
       });
     });
+
+    describe('toString', () => {
+      test('Row', () => {
+        const row = new Unit({ unitType: UnitType.Row, cellCoords: validRow });
+        expect(row.toString()).toEqual('{ UnitType: ROW, Row: 0 }');
+      });
+
+      test('Column', () => {
+        const column = new Unit({
+          unitType: UnitType.Column,
+          cellCoords: validColumn,
+        });
+        expect(column.toString()).toEqual('{ UnitType: COLUMN, Column: 0 }');
+      });
+
+      test('Box', () => {
+        const box = new Unit({ unitType: UnitType.Box, cellCoords: validBox });
+        expect(box.toString()).toEqual('{ UnitType: BOX, Row: 0, Column: 0 }');
+      });
+    });
   });
 });
 

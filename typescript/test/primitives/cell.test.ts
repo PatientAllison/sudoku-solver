@@ -385,4 +385,10 @@ describe('Cell', () => {
       expect(clone.getCandidates().size).toBeGreaterThan(1);
     });
   });
+
+  describe('toString', () => {
+    test('toString', () => {
+      expect(cell.toString()).toEqual('{ Row: 0, Column: 1, Value: 0 }');
+    });
+  });
 });

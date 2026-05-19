@@ -4,6 +4,9 @@ import {
   validBoard,
   wideBoard as tallBoard,
   nonSquareBoard,
+  rowConflict,
+  columnConflict,
+  boxConflict,
 } from '../fixtures';
 import { Board } from '../../src/primitives/board';
 import { Cell } from '../../src/primitives/cell';
@@ -19,7 +22,7 @@ vi.mock('../../src/utils', async () => {
   };
 });
 describe('Board', () => {
-  let validCells: Cell[][]
+  let validCells: Cell[][];
 
   beforeEach(() => {
     mockIsSquare.mockReturnValue(true);
@@ -35,7 +38,9 @@ describe('Board', () => {
       const board = new Board({ cells: validCells });
       expect(board.boxEdgeSize).toEqual(Math.sqrt(validCells.length));
       expect(board.unitSize).toEqual(validCells.length);
-      expect(board.totalBoardSize).toEqual(validCells.length * validCells[0].length);
+      expect(board.totalBoardSize).toEqual(
+        validCells.length * validCells[0].length
+      );
       expect(board.cells).toEqual(validCells);
       // Unit assertions
       expect(board.units.length).toEqual(validCells.length * 3);
@@ -116,11 +121,42 @@ describe('Board', () => {
     });
   });
 
+  describe('validate', () => {
+    test('valid board validates successfully', () => {
+      const board = new Board({ cells: validCells });
+      expect(() => board.validate()).not.toThrow();
+    });
+
+    test('row conflict throws error', () => {
+      const cells = buildCells(rowConflict);
+      const board = new Board({ cells });
+      expect(() => board.validate()).toThrow(
+        'Board is invalid! Violations: [ { Violated Unit: { UnitType: ROW'
+      );
+    });
+
+    test('column conflict throws error', () => {
+      const cells = buildCells(columnConflict);
+      const board = new Board({ cells });
+      expect(() => board.validate()).toThrow(
+        'Board is invalid! Violations: [ { Violated Unit: { UnitType: COLUMN'
+      );
+    });
+
+    test('box conflict throws error', () => {
+      const cells = buildCells(boxConflict);
+      const board = new Board({ cells });
+      expect(() => board.validate()).toThrow(
+        'Board is invalid! Violations: [ { Violated Unit: { UnitType: BOX'
+      );
+    });
+  });
+
   describe('getCellsForUnit', () => {
     test('getCellsForUnit returns accurate cells', () => {
       const board = new Board({ cells: validCells });
       const units = board.units;
-      units.forEach(unit => {
+      units.forEach((unit) => {
         const cellsForUnit = board.getCellsForUnit(unit);
         const coordsForUnit = unit.cellCoords;
         for (let i = 0; i < cellsForUnit.length; i++) {
