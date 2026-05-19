@@ -7,6 +7,8 @@ import {
   rowConflict,
   columnConflict,
   boxConflict,
+  fullButInvalidBoard,
+  solvedBoard,
 } from '../fixtures';
 import { Board } from '../../src/primitives/board';
 import { Cell } from '../../src/primitives/cell';
@@ -21,6 +23,7 @@ vi.mock('../../src/utils', async () => {
     isSquarePositiveInteger: mockIsSquare,
   };
 });
+
 describe('Board', () => {
   let validCells: Cell[][];
 
@@ -149,6 +152,44 @@ describe('Board', () => {
       expect(() => board.validate()).toThrow(
         'Board is invalid! Violations: [ { Violated Unit: { UnitType: BOX'
       );
+    });
+  });
+
+  describe('isFilled', () => {
+    test('returns false for in-progress board', () => {
+      const board = new Board({ cells: validCells });
+      expect(board.isFilled()).toEqual(false);
+    });
+
+    test('returns true for full but invalid board', () => {
+      const cells = buildCells(fullButInvalidBoard);
+      const board = new Board({ cells });
+      expect(board.isFilled()).toEqual(true);
+    });
+
+    test('returns true for solved board', () => {
+      const cells = buildCells(solvedBoard);
+      const board = new Board({ cells });
+      expect(board.isFilled()).toEqual(true);
+    });
+  });
+
+  describe('isSolved', () => {
+    test('returns false for in-progress board', () => {
+      const board = new Board({ cells: validCells });
+      expect(board.isSolved()).toEqual(false);
+    });
+
+    test('returns false for full but invalid board', () => {
+      const cells = buildCells(fullButInvalidBoard);
+      const board = new Board({ cells });
+      expect(board.isSolved()).toEqual(false);
+    });
+
+    test('returns true for solved board', () => {
+      const cells = buildCells(solvedBoard);
+      const board = new Board({ cells });
+      expect(board.isSolved()).toEqual(true);
     });
   });
 

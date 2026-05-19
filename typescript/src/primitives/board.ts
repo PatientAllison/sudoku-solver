@@ -168,6 +168,24 @@ export class Board {
     }
   }
 
+  public isFilled() {
+    const cellsWithValues = this.cells
+      .flat()
+      .filter((cell) => cell.getValue() !== undefined);
+    return cellsWithValues.length === this.totalBoardSize;
+  }
+
+  public isSolved() {
+    try {
+      this.validate();
+    } catch (error) {
+      console.log(error as Error);
+      return false;
+    }
+
+    return this.isFilled();
+  }
+
   public getCellsForUnit(unit: Unit) {
     return unit.cellCoords.map((coord) => this.cells[coord.row]![coord.col]!);
   }

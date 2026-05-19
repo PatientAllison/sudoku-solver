@@ -102,6 +102,34 @@ export const boxConflict = [
   [2, 0, 0,  6, 9, 0,  0, 7, 0],
 ];
 
+export const fullButInvalidBoard = [
+  [1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1],
+
+  [1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1],
+
+  [1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1],
+];
+
+export const solvedBoard = [
+  [3, 5, 8, 2, 6, 9, 7, 1, 4],
+  [7, 2, 9, 5, 4, 1, 3, 8, 6],
+  [1, 6, 4, 3, 7, 8, 5, 9, 2],
+
+  [5, 4, 3, 7, 8, 6, 1, 2, 9],
+  [6, 9, 2, 1, 3, 5, 8, 4, 7],
+  [8, 7, 1, 9, 2, 4, 6, 3, 5],
+
+  [9, 3, 6, 4, 1, 7, 2, 5, 8],
+  [4, 1, 7, 8, 5, 2, 9, 6, 3],
+  [2, 8, 5, 6, 9, 3, 4, 7, 1],
+];
+
 export const wideBoard = validBoard.slice(1);
 export const tallBoard = validBoard.map((row) => row.slice(1));
 // 4x9 board: both sides are square individually, but sides don't match
