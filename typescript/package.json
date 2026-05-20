@@ -2,7 +2,7 @@
   "name": "sudoku-solver",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/solve.js",
   "type": "module",
   "scripts": {
     "build": "tsc && npm run prettier && npm run eslint && npm run test:coverage",

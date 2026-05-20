@@ -185,5 +185,5 @@ export const buildBoard = (boardCells: number[][]) => {
 export const getRandomIndex = (max: number, min = 0) => {
   const roundedMin = Math.ceil(min);
   const roundedMax = Math.floor(max);
-  return Math.floor(Math.random() * (roundedMax - roundedMin + 1));
+  return Math.floor(Math.random() * (roundedMax - roundedMin));
 };
