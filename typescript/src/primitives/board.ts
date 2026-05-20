@@ -231,4 +231,21 @@ export class Board {
       return cell.getCandidates().size < min.getCandidates().size ? cell : min;
     });
   }
+
+  public getCellFromCoordinates(coordinates: Coordinates) {
+    if (coordinates.row >= this.unitSize) {
+      throw new Error(
+        'Requested row is out of bounds for this board! ' +
+          `Requested row: ${coordinates.row}, Max row: ${this.unitSize}`
+      );
+    } else if (coordinates.col >= this.unitSize) {
+      throw new Error(
+        'Requested column is out of bounds for this board! ' +
+          `Requested column: ${coordinates.col}, Max column: ${this.unitSize}`
+      );
+    }
+
+    // Non-null assertion is safe, we would have already thrown
+    return this.cells[coordinates.row]![coordinates.col]!;
+  }
 }

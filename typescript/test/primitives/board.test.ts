@@ -9,9 +9,12 @@ import {
   boxConflict,
   fullButInvalidBoard,
   solvedBoard,
+  buildBoard,
+  getRandomIndex,
 } from '../fixtures';
 import { Board } from '../../src/primitives/board';
 import { Cell } from '../../src/primitives/cell';
+import { Coordinates } from '../../src/types';
 
 const mockIsSquare = vi.hoisted(() => vi.fn());
 
@@ -131,24 +134,21 @@ describe('Board', () => {
     });
 
     test('row conflict throws error', () => {
-      const cells = buildCells(rowConflict);
-      const board = new Board({ cells });
+      const board = buildBoard(rowConflict);
       expect(() => board.validate()).toThrow(
         'Board is invalid! Violations: [ { Violated Unit: { UnitType: ROW'
       );
     });
 
     test('column conflict throws error', () => {
-      const cells = buildCells(columnConflict);
-      const board = new Board({ cells });
+      const board = buildBoard(columnConflict);
       expect(() => board.validate()).toThrow(
         'Board is invalid! Violations: [ { Violated Unit: { UnitType: COLUMN'
       );
     });
 
     test('box conflict throws error', () => {
-      const cells = buildCells(boxConflict);
-      const board = new Board({ cells });
+      const board = buildBoard(boxConflict);
       expect(() => board.validate()).toThrow(
         'Board is invalid! Violations: [ { Violated Unit: { UnitType: BOX'
       );
@@ -162,14 +162,12 @@ describe('Board', () => {
     });
 
     test('returns true for full but invalid board', () => {
-      const cells = buildCells(fullButInvalidBoard);
-      const board = new Board({ cells });
+      const board = buildBoard(fullButInvalidBoard);
       expect(board.isFilled()).toEqual(true);
     });
 
     test('returns true for solved board', () => {
-      const cells = buildCells(solvedBoard);
-      const board = new Board({ cells });
+      const board = buildBoard(solvedBoard);
       expect(board.isFilled()).toEqual(true);
     });
   });
@@ -181,14 +179,12 @@ describe('Board', () => {
     });
 
     test('returns false for full but invalid board', () => {
-      const cells = buildCells(fullButInvalidBoard);
-      const board = new Board({ cells });
+      const board = buildBoard(fullButInvalidBoard);
       expect(board.isSolved()).toEqual(false);
     });
 
     test('returns true for solved board', () => {
-      const cells = buildCells(solvedBoard);
-      const board = new Board({ cells });
+      const board = buildBoard(solvedBoard);
       expect(board.isSolved()).toEqual(true);
     });
   });
@@ -219,12 +215,48 @@ describe('Board', () => {
     });
 
     test('select empty cell throws if the board is filled', () => {
-      const cells = buildCells(solvedBoard);
-      const board = new Board({ cells });
+      const board = buildBoard(solvedBoard);
       // Which cell we get is hard to determine because of the candidate count sorting
       // Just assert we get a cell
       expect(() => board.selectEmptyCell()).toThrow(
         'Board is already filled! There are no empty cells!'
+      );
+    });
+  });
+
+  describe('getCellFromCoordinates', () => {
+    test('returns a valid cell', () => {
+      const board = new Board({ cells: validCells });
+      const rowIndex = getRandomIndex(validCells.length);
+      const row = validCells[rowIndex];
+      const colIndex = getRandomIndex(row.length);
+
+      const coordinates = { row: rowIndex, col: colIndex };
+      const cell = board.getCellFromCoordinates(coordinates);
+      expect(cell.coordinates).toEqual(coordinates);
+    });
+
+    test('throws an error with out of bounds row', () => {
+      const board = new Board({ cells: validCells });
+      const rowIndex = validCells.length;
+      // Just use the first row since we don't want to be out of bounds in the setup
+      const colIndex = getRandomIndex(validCells[0].length);
+
+      const coordinates = { row: rowIndex, col: colIndex };
+      expect(() => board.getCellFromCoordinates(coordinates)).toThrow(
+        /Requested row is out of bounds for this board!/
+      );
+    });
+
+    test('throws an error with out of bounds col', () => {
+      const board = new Board({ cells: validCells });
+      const rowIndex = getRandomIndex(validCells.length);
+      const row = validCells[rowIndex];
+      const colIndex = row.length;
+
+      const coordinates = { row: rowIndex, col: colIndex };
+      expect(() => board.getCellFromCoordinates(coordinates)).toThrow(
+        /Requested column is out of bounds for this board!/
       );
     });
   });
