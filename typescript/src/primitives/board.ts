@@ -13,6 +13,9 @@ export interface BoardParams {
   cells: Cell[][];
 }
 
+/**
+ * A complete Sudoku board
+ */
 export class Board {
   // Box edge size for easy lookup
   readonly boxEdgeSize: number;
@@ -55,6 +58,10 @@ export class Board {
     this.units = this.buildUnits();
   }
 
+  /**
+   * Builds units from a 2D array of cells
+   * @returns Array of Units (rows, columns, boxes)
+   */
   private buildUnits() {
     const rowCoords: Coordinates[][] = Array.from(
       { length: this.unitSize },
@@ -104,6 +111,10 @@ export class Board {
     return units;
   }
 
+  /**
+   * Clones the board for use in backtracking
+   * @returns A cloned board
+   */
   public clone() {
     const clonedCells = this.cells.map((row) =>
       row.map((cell) => cell.clone())
@@ -125,6 +136,10 @@ export class Board {
     return this.units.filter((unit) => unit.unitType === UnitType.Box) as Box[];
   }
 
+  /**'
+   * Validates that the current board state is valid
+   * @throws A list of board violations
+   */
   public validate() {
     const violations = new Map<Unit, Cell[]>();
 
@@ -168,6 +183,10 @@ export class Board {
     }
   }
 
+  /**
+   * Determines if every cell in the board has a value. Does not check validity
+   * @returns if the board is already filled
+   */
   public isFilled() {
     const cellsWithValues = this.cells
       .flat()
@@ -175,6 +194,10 @@ export class Board {
     return cellsWithValues.length === this.totalBoardSize;
   }
 
+  /**
+   * Determines if the board is already solved
+   * @returns If the board is solved or not
+   */
   public isSolved() {
     try {
       this.validate();
@@ -188,5 +211,24 @@ export class Board {
 
   public getCellsForUnit(unit: Unit) {
     return unit.cellCoords.map((coord) => this.cells[coord.row]![coord.col]!);
+  }
+
+  /**
+   * Get the empty cell with the fewest candidates (best cell for use in backtracking)
+   * @returns the empty cell with the fewest candidates
+   * @throws if the board is already filled and there are no empty cells
+   */
+  public selectEmptyCell() {
+    const emptyCells = this.cells
+      .flat()
+      .filter((cell) => cell.getValue() === undefined);
+
+    if (emptyCells.length === 0) {
+      throw new Error('Board is already filled! There are no empty cells!');
+    }
+
+    return emptyCells.reduce((min, cell) => {
+      return cell.getCandidates().size < min.getCandidates().size ? cell : min;
+    });
   }
 }

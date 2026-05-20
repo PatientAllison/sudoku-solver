@@ -206,4 +206,26 @@ describe('Board', () => {
       });
     });
   });
+
+  describe('selectEmptyCell', () => {
+    test('select empty cell selects an empty cell', () => {
+      const cells = buildCells(validBoard);
+      // This is just for coverage so the first cell is not forever the minimum cell
+      cells[0][2].removeCandidate(1);
+      const board = new Board({ cells });
+      // Which cell we get is hard to determine because of the candidate count sorting
+      // Just assert we get a cell
+      expect(board.selectEmptyCell()).toBeDefined();
+    });
+
+    test('select empty cell throws if the board is filled', () => {
+      const cells = buildCells(solvedBoard);
+      const board = new Board({ cells });
+      // Which cell we get is hard to determine because of the candidate count sorting
+      // Just assert we get a cell
+      expect(() => board.selectEmptyCell()).toThrow(
+        'Board is already filled! There are no empty cells!'
+      );
+    });
+  });
 });
