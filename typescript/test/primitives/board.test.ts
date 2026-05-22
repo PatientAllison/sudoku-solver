@@ -19,6 +19,7 @@ import {
 import { Board } from '../../src/primitives/board';
 import { Cell } from '../../src/primitives/cell';
 import { solveWithBackTracking } from '../../src/solver';
+import { UnitType } from '../../src/types';
 
 const mockIsSquare = vi.hoisted(() => vi.fn());
 
@@ -265,6 +266,27 @@ describe('Board', () => {
     });
   });
 
+  describe('getUnitsFromCoordinates', () => {
+    test('3 Units contain coordinates', () => {
+      const board = buildBoard(validBoard);
+      const coordinates = board.cells.flat().map((cell) => cell.coordinates);
+      coordinates.forEach((coordinates) => {
+        const units = board.getUnitsFromCoordinates(coordinates);
+        // There are exactly 3 units for each Coordinate
+        expect(units.length).toEqual(3);
+        const unitTypes = units.map((unit) => unit.unitType);
+        // One of each type
+        Object.values(UnitType).forEach((unitType) => {
+          expect(unitTypes).toContain(unitType);
+        });
+        // And they contain the coordinates
+        units.forEach((unit) => {
+          expect(unit.cellCoords).toContainEqual(coordinates);
+        });
+      });
+    });
+  });
+
   describe('print', () => {
     test('Prints solved 9x9 board', () => {
       const board = buildBoard(solvedBoard);
@@ -328,7 +350,6 @@ describe('Board', () => {
 
     test('Prints 16x16 board', () => {
       const board = buildBoard(sixteenBySixteenBoard);
-      // This is just the output of the console.log, I'll fix it later
       const expected = `
         .. .. 15 .. | .. .. .8 .. | .6 .. .. .. | .2 10 .. ..
         .. .4 .8 .3 | .. .6 12 .. | .9 .7 .. 14 | .. .. .. ..

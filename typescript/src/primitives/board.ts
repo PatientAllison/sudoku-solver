@@ -249,6 +249,14 @@ export class Board {
     return this.cells[coordinates.row]![coordinates.col]!;
   }
 
+  public getUnitsFromCoordinates(coordinates: Coordinates) {
+    return this.units.filter((unit) =>
+      unit.cellCoords.some(
+        (c) => c.row === coordinates.row && c.col === coordinates.col
+      )
+    );
+  }
+
   public print() {
     const rows: string[] = [];
     for (let row = 0; row < this.unitSize; row++) {
