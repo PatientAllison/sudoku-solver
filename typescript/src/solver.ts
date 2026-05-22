@@ -16,6 +16,7 @@ export const solveWithBackTracking = (board: Board): Board => {
       emptyCell.coordinates
     );
     clonedCell.setValue(candidate);
+    clonedBoard.removeCandidatesFromPeers(clonedCell.coordinates, candidate);
     try {
       return solveWithBackTracking(clonedBoard);
     } catch {

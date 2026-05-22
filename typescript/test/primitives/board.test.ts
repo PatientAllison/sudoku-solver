@@ -18,7 +18,6 @@ import {
 } from '../fixtures';
 import { Board } from '../../src/primitives/board';
 import { Cell } from '../../src/primitives/cell';
-import { solveWithBackTracking } from '../../src/solver';
 import { UnitType } from '../../src/types';
 
 const mockIsSquare = vi.hoisted(() => vi.fn());
@@ -282,6 +281,67 @@ describe('Board', () => {
         // And they contain the coordinates
         units.forEach((unit) => {
           expect(unit.cellCoords).toContainEqual(coordinates);
+        });
+      });
+    });
+  });
+
+  describe('getPeersFromCoordinates', () => {
+    test('returns peers for coordinates', () => {
+      const board = buildBoard(validBoard);
+      const cellCoordinates = board.cells
+        .flat()
+        .map((cell) => cell.coordinates);
+      cellCoordinates.forEach((coordinates) => {
+        const peers = board.getPeersFromCoordinates(coordinates);
+        peers.forEach((peer) => {
+          // Peer is not the same cell
+          expect(peer.coordinates).not.toEqual(coordinates);
+          // Peer shares at least one unit with cell
+          const cellUnits = board.getUnitsFromCoordinates(coordinates);
+          const peerUnits = board.getUnitsFromCoordinates(peer.coordinates);
+          const cellRow = cellUnits.find(
+            (unit) => unit.unitType === UnitType.Row
+          );
+          const peerRow = peerUnits.find(
+            (unit) => unit.unitType === UnitType.Row
+          );
+          const cellCol = cellUnits.find(
+            (unit) => unit.unitType === UnitType.Column
+          );
+          const peerCol = cellUnits.find(
+            (unit) => unit.unitType === UnitType.Column
+          );
+          const cellBox = cellUnits.find(
+            (unit) => unit.unitType === UnitType.Box
+          );
+          const peerBox = cellUnits.find(
+            (unit) => unit.unitType === UnitType.Box
+          );
+          const shareUnit =
+            cellRow === peerRow || cellCol === peerCol || cellBox === peerBox;
+          expect(shareUnit).toEqual(true);
+        });
+      });
+    });
+  });
+
+  describe('removeCandidatesFromPeers', () => {
+    test('remove candidates for initial board', () => {
+      const board = buildBoard(validBoard);
+      const cells = board.cells.flat();
+      // Initial run to remove all candidates from peers
+      cells.forEach((cell) => {
+        const value = cell.getValue();
+        if (value) {
+          board.removeCandidatesFromPeers(cell.coordinates, value);
+        }
+      });
+      // Check that candidates are removed
+      cells.forEach((cell) => {
+        const peers = board.getPeersFromCoordinates(cell.coordinates);
+        peers.forEach((peer) => {
+          expect(peer.getCandidates()).not.toContain(cell.getValue());
         });
       });
     });

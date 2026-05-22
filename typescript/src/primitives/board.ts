@@ -257,6 +257,26 @@ export class Board {
     );
   }
 
+  public getPeersFromCoordinates(targetCoordinates: Coordinates) {
+    const unitsForCell = this.getUnitsFromCoordinates(targetCoordinates);
+    const coordinates = unitsForCell.map((unit) => unit.cellCoords).flat();
+    const otherCoordinates = coordinates.filter((other) => {
+      return (
+        other.row !== targetCoordinates.row ||
+        other.col !== targetCoordinates.col
+      );
+    });
+    return otherCoordinates.map((coordinates) =>
+      this.getCellFromCoordinates(coordinates)
+    );
+  }
+
+  public removeCandidatesFromPeers(coordinates: Coordinates, value: number) {
+    this.getPeersFromCoordinates(coordinates).forEach((cell) =>
+      cell.removeCandidate(value)
+    );
+  }
+
   public print() {
     const rows: string[] = [];
     for (let row = 0; row < this.unitSize; row++) {

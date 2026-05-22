@@ -30,8 +30,15 @@ const solve = () => {
     process.exit(1);
   }
 
-  solveWithBackTracking(board);
-  console.log('Board is solved!');
+  board.cells.flat().forEach((cell) => {
+    const value = cell.getValue();
+    if (value !== undefined) {
+      board.removeCandidatesFromPeers(cell.coordinates, value);
+    }
+  });
+
+  const solvedBoard = solveWithBackTracking(board);
+  console.log(solvedBoard.print());
 };
 
 solve();
