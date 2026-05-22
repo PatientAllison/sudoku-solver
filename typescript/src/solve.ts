@@ -38,7 +38,7 @@ const solve = () => {
   });
 
   const solvedBoard = solveWithBackTracking(board);
-  console.log(solvedBoard.print());
+  console.log(solvedBoard.prettyPrint());
 };
 
 solve();

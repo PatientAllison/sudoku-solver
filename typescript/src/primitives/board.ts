@@ -277,7 +277,16 @@ export class Board {
     );
   }
 
-  public print() {
+  public jsonPrint() {
+    const result: number[][] = [];
+    this.cells.forEach((row) => {
+      const values = row.map((cell) => cell.getValue() ?? 0);
+      result.push(values);
+    });
+    return JSON.stringify(result);
+  }
+
+  public prettyPrint() {
     const rows: string[] = [];
     for (let row = 0; row < this.unitSize; row++) {
       let result = '';

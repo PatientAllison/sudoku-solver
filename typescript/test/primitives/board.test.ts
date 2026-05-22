@@ -15,6 +15,7 @@ import {
   solvedFourByFourBoard,
   fourByFourBoard,
   sixteenBySixteenBoard,
+  solvedSixteenBySixteenBoard,
 } from '../fixtures';
 import { Board } from '../../src/primitives/board';
 import { Cell } from '../../src/primitives/cell';
@@ -347,7 +348,7 @@ describe('Board', () => {
     });
   });
 
-  describe('print', () => {
+  describe('prettyPrint', () => {
     test('Prints solved 9x9 board', () => {
       const board = buildBoard(solvedBoard);
       const expected = `
@@ -363,7 +364,7 @@ describe('Board', () => {
         4 1 7 | 8 5 2 | 9 6 3
         2 8 5 | 6 9 3 | 4 7 1
       `;
-      expect(board.print()).toEqual(dedent(expected));
+      expect(board.prettyPrint()).toEqual(dedent(expected));
     });
 
     test('Prints unsolved 9x9 board', () => {
@@ -381,7 +382,7 @@ describe('Board', () => {
         . . . | 8 . 2 | . 6 3
         2 . . | 6 9 . | . 7 .
       `;
-      expect(board.print()).toEqual(dedent(expected));
+      expect(board.prettyPrint()).toEqual(dedent(expected));
     });
 
     test('Prints solved 4x4 board', () => {
@@ -393,7 +394,7 @@ describe('Board', () => {
         3 4 | 2 1
         1 2 | 3 4
       `;
-      expect(board.print()).toEqual(dedent(expected));
+      expect(board.prettyPrint()).toEqual(dedent(expected));
     });
 
     test('Prints unsolved 4x4 board', () => {
@@ -405,10 +406,36 @@ describe('Board', () => {
         . . | . .
         . 2 | . 4
       `;
-      expect(board.print()).toEqual(dedent(expected));
+      expect(board.prettyPrint()).toEqual(dedent(expected));
     });
 
-    test('Prints 16x16 board', () => {
+    test('Prints solved 16x16 board', () => {
+      const board = buildBoard(solvedSixteenBySixteenBoard);
+      const expected = `
+        12 .7 15 14 | .1 .3 .8 .4 | .6 11 16 .5 | .2 10 13 .9
+        .2 .4 .8 .3 | 10 .6 12 13 | .9 .7 15 14 | .1 16 11 .5
+        .5 16 .6 13 | .9 15 11 14 | 12 10 .2 .1 | .3 .4 .7 .8
+        11 10 .1 .9 | 16 .7 .5 .2 | .8 .3 .4 13 | .6 12 14 15
+        ------------+-------------+-------------+------------
+        .6 13 .5 15 | .2 10 .3 .9 | 14 .1 .7 11 | .4 .8 16 12
+        .1 14 11 .4 | .5 12 15 16 | 13 .6 .8 .2 | .7 .9 10 .3
+        .8 .3 .9 .2 | 13 .4 14 .7 | 16 12 .5 10 | 15 .1 .6 11
+        16 12 10 .7 | .8 11 .6 .1 | .3 15 .9 .4 | 14 .2 .5 13
+        ------------+-------------+-------------+------------
+        .7 .1 13 16 | 14 .2 10 11 | 15 .9 .6 12 | .5 .3 .8 .4
+        15 .2 .4 .8 | .7 .9 13 12 | .5 14 .3 16 | 10 11 .1 .6
+        .9 .6 12 10 | .3 .5 .4 .8 | .1 13 11 .7 | 16 15 .2 14
+        14 11 .3 .5 | 15 16 .1 .6 | .4 .2 10 .8 | 12 13 .9 .7
+        ------------+-------------+-------------+------------
+        13 .8 16 11 | .4 .1 .7 .3 | 10 .5 12 .6 | .9 14 15 .2
+        10 15 .2 .1 | 11 .8 .9 .5 | .7 .4 14 .3 | 13 .6 12 16
+        .3 .9 .7 12 | .6 14 16 10 | .2 .8 13 15 | 11 .5 .4 .1
+        .4 .5 14 .6 | 12 13 .2 15 | 11 16 .1 .9 | .8 .7 .3 10
+      `;
+      expect(board.prettyPrint()).toEqual(dedent(expected));
+    });
+
+    test('Prints unsolved 16x16 board', () => {
       const board = buildBoard(sixteenBySixteenBoard);
       const expected = `
         .. .. 15 .. | .. .. .8 .. | .6 .. .. .. | .2 10 .. ..
@@ -431,10 +458,41 @@ describe('Board', () => {
         .. .. .7 12 | .. 14 .. .. | .. .. 13 .. | 11 .. .4 .1
         .4 .5 .. .. | .. 13 .. .. | .. .. .. .. | .. .7 .. ..
       `;
-      expect(board.print()).toEqual(dedent(expected));
+      expect(board.prettyPrint()).toEqual(dedent(expected));
+    });
+  });
+
+  describe('jsonPrint', () => {
+    test('Prints solved 9x9 board', () => {
+      const board = buildBoard(solvedBoard);
+      expect(board.jsonPrint()).toEqual(JSON.stringify(solvedBoard));
     });
 
-    // TODO: Add a 16x16 solved board test as I am not solving this thing by hand
-    // Tried running it through the backTracking solver and ran OOM
+    test('Prints unsolved 9x9 board', () => {
+      const board = buildBoard(validBoard);
+      expect(board.jsonPrint()).toEqual(JSON.stringify(validBoard));
+    });
+
+    test('Prints solved 4x4 board', () => {
+      const board = buildBoard(solvedFourByFourBoard);
+      expect(board.jsonPrint()).toEqual(JSON.stringify(solvedFourByFourBoard));
+    });
+
+    test('Prints unsolved 4x4 board', () => {
+      const board = buildBoard(fourByFourBoard);
+      expect(board.jsonPrint()).toEqual(JSON.stringify(fourByFourBoard));
+    });
+
+    test('Prints solved 16x16 board', () => {
+      const board = buildBoard(solvedSixteenBySixteenBoard);
+      expect(board.jsonPrint()).toEqual(
+        JSON.stringify(solvedSixteenBySixteenBoard)
+      );
+    });
+
+    test('Prints 16x16 board', () => {
+      const board = buildBoard(sixteenBySixteenBoard);
+      expect(board.jsonPrint()).toEqual(JSON.stringify(sixteenBySixteenBoard));
+    });
   });
 });
