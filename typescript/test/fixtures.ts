@@ -149,6 +149,62 @@ export const unsolvableBoard = [
   [0, 0, 0,  0, 0, 0,  0, 0, 0],
 ];
 
+// prettier-ignore
+export const fourByFourBoard = [
+  [4, 0,  1, 0],
+  [0, 0,  0, 0],
+
+  [0, 0,  0, 0],
+  [0, 2,  0, 4],
+];
+
+// prettier-ignore
+export const solvedFourByFourBoard = [
+  [4, 3,  1, 2],
+  [2, 1,  4, 3],
+
+  [3, 4,  2, 1],
+  [1, 2,  3, 4],
+];
+
+// prettier-ignore
+export const sixteenBySixteenBoard = [
+  [ 0,  0, 15,  0,   0,  0,  8,  0,   6,  0,  0,  0,   2, 10,  0,  0],
+
+  [ 0,  4,  8,  3,   0,  6, 12,  0,   9,  7,  0, 14,   0,  0,  0,  0],
+
+  [ 5,  0,  0,  0,   0, 15,  0, 14,  12,  0,  0,  1,   0,  0,  7,  0],
+
+  [11,  0,  1,  9,   0,  7,  0,  0,   0,  3,  4,  0,   0,  0,  0,  0],
+
+
+  [ 0,  0,  0,  0,   0,  0,  0,  0,   0,  1,  0, 11,   4,  8,  0,  0],
+
+  [ 0, 14,  0,  0,   0,  0, 15,  0,   0,  0,  8,  0,   0,  9, 10,  3],
+
+  [ 0,  0,  0,  2,   0,  0,  0,  7,  16,  0,  5,  0,   0,  1,  6,  0],
+
+  [16, 12,  0,  0,   0, 11,  6,  0,   0,  0,  0,  4,   0,  0,  5,  0],
+
+
+  [ 0,  1,  0,  0,  14,  2,  0,  0,   0,  0,  6,  0,   0,  0,  0,  4],
+
+  [ 0,  0,  4,  0,   0,  9,  0, 12,   5,  0,  0, 16,   0,  0,  0,  0],
+
+  [ 9,  6, 12, 10,   3,  5,  0,  0,   1,  0, 11,  0,  16, 15,  0, 14],
+
+  [14,  0,  3,  0,  15,  0,  0,  0,   0,  0, 10,  8,  12, 13,  9,  0],
+
+
+  [ 0,  0, 16,  0,   0,  0,  0,  3,  10,  0,  0,  0,   0, 14,  0,  0],
+
+  [ 0, 15,  0,  0,   0,  0,  9,  5,   0,  4, 14,  0,  13,  0,  0, 16],
+
+  [ 0,  0,  7, 12,   0, 14,  0,  0,   0,  0, 13,  0,  11,  0,  4,  1],
+
+  [ 4,  5,  0,  0,   0, 13,  0,  0,   0,  0,  0,  0,   0,  7,  0,  0],
+];
+
 export const wideBoard = validBoard.slice(1);
 export const tallBoard = validBoard.map((row) => row.slice(1));
 // 4x9 board: both sides are square individually, but sides don't match
@@ -186,4 +242,8 @@ export const getRandomIndex = (max: number, min = 0) => {
   const roundedMin = Math.ceil(min);
   const roundedMax = Math.floor(max);
   return Math.floor(Math.random() * (roundedMax - roundedMin));
+};
+
+export const dedent = (str: string) => {
+  return str.replace(/\n\s+/g, '\n').trim();
 };

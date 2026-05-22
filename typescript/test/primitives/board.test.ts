@@ -11,10 +11,14 @@ import {
   solvedBoard,
   buildBoard,
   getRandomIndex,
+  dedent,
+  solvedFourByFourBoard,
+  fourByFourBoard,
+  sixteenBySixteenBoard,
 } from '../fixtures';
 import { Board } from '../../src/primitives/board';
 import { Cell } from '../../src/primitives/cell';
-import { Coordinates } from '../../src/types';
+import { solveWithBackTracking } from '../../src/solver';
 
 const mockIsSquare = vi.hoisted(() => vi.fn());
 
@@ -259,5 +263,97 @@ describe('Board', () => {
         /Requested column is out of bounds for this board!/
       );
     });
+  });
+
+  describe('print', () => {
+    test('Prints solved 9x9 board', () => {
+      const board = buildBoard(solvedBoard);
+      const expected = `
+        3 5 8 | 2 6 9 | 7 1 4
+        7 2 9 | 5 4 1 | 3 8 6
+        1 6 4 | 3 7 8 | 5 9 2
+        ------+-------+------
+        5 4 3 | 7 8 6 | 1 2 9
+        6 9 2 | 1 3 5 | 8 4 7
+        8 7 1 | 9 2 4 | 6 3 5
+        ------+-------+------
+        9 3 6 | 4 1 7 | 2 5 8
+        4 1 7 | 8 5 2 | 9 6 3
+        2 8 5 | 6 9 3 | 4 7 1
+      `;
+      expect(board.print()).toEqual(dedent(expected));
+    });
+
+    test('Prints unsolved 9x9 board', () => {
+      const board = buildBoard(validBoard);
+      const expected = `
+        . 5 . | . 6 9 | . . 4
+        7 2 . | 5 . 1 | . . .
+        1 . 4 | . 7 . | . 9 .
+        ------+-------+------
+        . 4 3 | . . . | 1 . .
+        6 9 . | . 3 . | . 4 7
+        . . 1 | . . . | 6 3 .
+        ------+-------+------
+        . 3 . | . 1 . | 2 . 8
+        . . . | 8 . 2 | . 6 3
+        2 . . | 6 9 . | . 7 .
+      `;
+      expect(board.print()).toEqual(dedent(expected));
+    });
+
+    test('Prints solved 4x4 board', () => {
+      const board = buildBoard(solvedFourByFourBoard);
+      const expected = `
+        4 3 | 1 2
+        2 1 | 4 3
+        ----+----
+        3 4 | 2 1
+        1 2 | 3 4
+      `;
+      expect(board.print()).toEqual(dedent(expected));
+    });
+
+    test('Prints unsolved 4x4 board', () => {
+      const board = buildBoard(fourByFourBoard);
+      const expected = `
+        4 . | 1 .
+        . . | . .
+        ----+----
+        . . | . .
+        . 2 | . 4
+      `;
+      expect(board.print()).toEqual(dedent(expected));
+    });
+
+    test('Prints 16x16 board', () => {
+      const board = buildBoard(sixteenBySixteenBoard);
+      // This is just the output of the console.log, I'll fix it later
+      const expected = `
+        .. .. 15 .. | .. .. .8 .. | .6 .. .. .. | .2 10 .. ..
+        .. .4 .8 .3 | .. .6 12 .. | .9 .7 .. 14 | .. .. .. ..
+        .5 .. .. .. | .. 15 .. 14 | 12 .. .. .1 | .. .. .7 ..
+        11 .. .1 .9 | .. .7 .. .. | .. .3 .4 .. | .. .. .. ..
+        ------------+-------------+-------------+------------
+        .. .. .. .. | .. .. .. .. | .. .1 .. 11 | .4 .8 .. ..
+        .. 14 .. .. | .. .. 15 .. | .. .. .8 .. | .. .9 10 .3
+        .. .. .. .2 | .. .. .. .7 | 16 .. .5 .. | .. .1 .6 ..
+        16 12 .. .. | .. 11 .6 .. | .. .. .. .4 | .. .. .5 ..
+        ------------+-------------+-------------+------------
+        .. .1 .. .. | 14 .2 .. .. | .. .. .6 .. | .. .. .. .4
+        .. .. .4 .. | .. .9 .. 12 | .5 .. .. 16 | .. .. .. ..
+        .9 .6 12 10 | .3 .5 .. .. | .1 .. 11 .. | 16 15 .. 14
+        14 .. .3 .. | 15 .. .. .. | .. .. 10 .8 | 12 13 .9 ..
+        ------------+-------------+-------------+------------
+        .. .. 16 .. | .. .. .. .3 | 10 .. .. .. | .. 14 .. ..
+        .. 15 .. .. | .. .. .9 .5 | .. .4 14 .. | 13 .. .. 16
+        .. .. .7 12 | .. 14 .. .. | .. .. 13 .. | 11 .. .4 .1
+        .4 .5 .. .. | .. 13 .. .. | .. .. .. .. | .. .7 .. ..
+      `;
+      expect(board.print()).toEqual(dedent(expected));
+    });
+
+    // TODO: Add a 16x16 solved board test as I am not solving this thing by hand
+    // Tried running it through the backTracking solver and ran OOM
   });
 });

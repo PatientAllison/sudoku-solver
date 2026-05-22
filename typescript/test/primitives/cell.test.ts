@@ -391,4 +391,66 @@ describe('Cell', () => {
       expect(cell.toString()).toEqual('{ Row: 0, Column: 1, Value: 0 }');
     });
   });
+
+  describe('print', () => {
+    test('value with single-digit unitSize', () => {
+      cell = new Cell({
+        coordinates,
+        unitSize,
+        givenValue,
+      });
+
+      expect(cell.print()).toEqual(givenValue.toString());
+    });
+
+    test('no value with single-digit unitSize', () => {
+      cell = new Cell({
+        coordinates,
+        unitSize,
+      });
+
+      expect(cell.print()).toEqual('.');
+    });
+
+    test('single-digit value with double-digit unitSize', () => {
+      cell = new Cell({
+        coordinates,
+        unitSize: 16,
+        givenValue,
+      });
+
+      expect(cell.print()).toEqual(`.${givenValue.toString()}`);
+    });
+
+    test('double-digit value with double-digit unitSize', () => {
+      const givenValue = 11;
+      cell = new Cell({
+        coordinates,
+        unitSize: 16,
+        givenValue,
+      });
+
+      expect(cell.print()).toEqual(`${givenValue.toString()}`);
+    });
+
+    test('10 with double-digit unitSize', () => {
+      const givenValue = 10;
+      cell = new Cell({
+        coordinates,
+        unitSize: 16,
+        givenValue,
+      });
+
+      expect(cell.print()).toEqual(`${givenValue.toString()}`);
+    });
+
+    test('no value with double-digit unitSize', () => {
+      cell = new Cell({
+        coordinates,
+        unitSize: 16,
+      });
+
+      expect(cell.print()).toEqual(`..`);
+    });
+  });
 });

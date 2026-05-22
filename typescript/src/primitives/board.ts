@@ -248,4 +248,50 @@ export class Board {
     // Non-null assertion is safe, we would have already thrown
     return this.cells[coordinates.row]![coordinates.col]!;
   }
+
+  public print() {
+    const rows: string[] = [];
+    for (let row = 0; row < this.unitSize; row++) {
+      let result = '';
+      for (let col = 0; col < this.unitSize; col++) {
+        result += this.cells[row]![col]!.print();
+        const plusOne = col + 1;
+        const notAtEnd = plusOne !== this.unitSize;
+        if (notAtEnd) {
+          result += ' ';
+        }
+        if (plusOne % this.boxEdgeSize === 0 && notAtEnd) {
+          result += '| ';
+        }
+      }
+      rows.push(result);
+
+      const plusOne = row + 1;
+      const notAtEnd = plusOne !== this.unitSize;
+
+      if (plusOne % this.boxEdgeSize === 0 && notAtEnd) {
+        rows.push(this.getHorizontalDivider());
+      }
+    }
+    return rows.join('\n');
+  }
+
+  private getHorizontalDivider() {
+    const cellWidth = Math.ceil(this.unitSize / 10);
+    let divider = '';
+    for (let i = 0; i < this.boxEdgeSize; i++) {
+      const plusOne = i + 1;
+      const isMiddle = i !== 0 && plusOne !== this.boxEdgeSize;
+      // Add one box worth of divisions
+      divider += '-'.repeat(this.boxEdgeSize * (cellWidth + 1));
+      // Add one extra to account for the extra space between the vertical divider and the first element
+      if (isMiddle) {
+        divider += '-';
+      }
+      if (i + 1 !== this.boxEdgeSize) {
+        divider += '+';
+      }
+    }
+    return divider;
+  }
 }

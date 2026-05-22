@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from 'vitest';
 import { parse, parseFromFile } from '../src/parser';
 import { validBoard } from './fixtures';
-import jsonData from '../../resources/puzzleInputs/easy/0.json' with { type: 'json' };
+import jsonData from '../../resources/puzzleInputs/16x16/easy/0.json' with { type: 'json' };
 
 const mockReadFile = vi.hoisted(() => vi.fn());
 
@@ -62,7 +62,9 @@ describe('parser', () => {
   describe('parseFromFile', () => {
     test('Successfully parses valid board', () => {
       mockReadFile.mockReturnValueOnce(JSON.stringify(jsonData));
-      const board = parseFromFile('../../resources/puzzleInputs/easy/0.json');
+      const board = parseFromFile(
+        '../../resources/puzzleInputs/16x16/easy/0.json'
+      );
       // Don't bother validating all board fields, we already do that in the Board tests
       expect(board).toBeDefined();
     });
@@ -72,7 +74,7 @@ describe('parser', () => {
         throw new Error('File not found');
       });
       expect(() =>
-        parseFromFile('../../resources/puzzleInputs/easy/0.json')
+        parseFromFile('../../resources/puzzleInputs/16x16/easy/0.json')
       ).toThrow(/Failed to read file/);
     });
   });
