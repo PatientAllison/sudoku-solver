@@ -239,9 +239,27 @@ export const solvedSixteenBySixteenBoard = [
   [10, 15,  2,  1,  11,  8,  9,  5,   7,  4, 14,  3,  13,  6, 12, 16],
 
   [ 3,  9,  7, 12,   6, 14, 16, 10,   2,  8, 13, 15,  11,  5,  4,  1],
-  
+
   [ 4,  5, 14,  6,  12, 13,  2, 15,  11, 16,  1,  9,   8,  7,  3, 10],
 ];
+
+const duplicateRow = (row: number[]) => {
+  const board: number[][] = [];
+  for (let i = 0; i < row.length; i++) {
+    board.push([...row]);
+  }
+  return board;
+};
+
+// prettier-ignore
+const empty9x9Row = [0, 0, 0,  0, 0, 0,  0, 0, 0];
+export const empty9x9Board = duplicateRow(empty9x9Row);
+// prettier-ignore
+const empty4x4Row = [0, 0,  0, 0];
+export const empty4x4Board = duplicateRow(empty4x4Row);
+// prettier-ignore
+const empty16x16Row = [0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,  0, 0, 0, 0,];
+export const empty16x16Board = duplicateRow(empty16x16Row);
 
 export const wideBoard = validBoard.slice(1);
 export const tallBoard = validBoard.map((row) => row.slice(1));

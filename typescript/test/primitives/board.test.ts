@@ -16,6 +16,9 @@ import {
   fourByFourBoard,
   sixteenBySixteenBoard,
   solvedSixteenBySixteenBoard,
+  empty4x4Board,
+  empty9x9Board,
+  empty16x16Board,
 } from '../fixtures';
 import { Board } from '../../src/primitives/board';
 import { Cell } from '../../src/primitives/cell';
@@ -344,6 +347,42 @@ describe('Board', () => {
         peers.forEach((peer) => {
           expect(peer.getCandidates()).not.toContain(cell.getValue());
         });
+      });
+    });
+  });
+
+  describe('getCandidateCount', () => {
+    test('gets count for empty boards', () => {
+      const cells = [empty4x4Board, empty9x9Board, empty16x16Board];
+      const boards = cells.map((board) => buildBoard(board));
+      boards.forEach((board) => {
+        const expected = board.unitSize * board.cells.flat().length;
+        expect(board.getCandidateCount()).toEqual(expected);
+      });
+    });
+
+    test('gets count for partial board', () => {
+      const cells = [fourByFourBoard, validBoard, sixteenBySixteenBoard];
+      const boards = cells.map((board) => buildBoard(board));
+      boards.forEach((board) => {
+        // Don't bother coming up with precise numbers for each board, just assert a range
+        const max = board.unitSize * board.cells.flat().length;
+        const candidateCount = board.getCandidateCount();
+        expect(candidateCount).toBeGreaterThan(0);
+        expect(candidateCount).toBeLessThan(max);
+      });
+    });
+
+    test('gets count for full board', () => {
+      const cells = [
+        solvedFourByFourBoard,
+        solvedBoard,
+        solvedSixteenBySixteenBoard,
+      ];
+      const boards = cells.map((board) => buildBoard(board));
+      boards.forEach((board) => {
+        // Don't bother coming up with precise numbers for each board, just assert a range
+        expect(board.getCandidateCount()).toEqual(0);
       });
     });
   });

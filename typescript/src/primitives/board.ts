@@ -277,6 +277,17 @@ export class Board {
     );
   }
 
+  public getCandidateCount() {
+    return this.cells
+      .flat()
+      .reduce(
+        (count, cell) =>
+          count +
+          (cell.getValue() === undefined ? cell.getCandidates().size : 0),
+        0
+      );
+  }
+
   public jsonPrint() {
     const result: number[][] = [];
     this.cells.forEach((row) => {
