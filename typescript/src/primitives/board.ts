@@ -277,6 +277,15 @@ export class Board {
     );
   }
 
+  public initializeCandidates() {
+    this.cells.flat().forEach((cell) => {
+      const value = cell.getValue();
+      if (value !== undefined) {
+        this.removeCandidatesFromPeers(cell.coordinates, value);
+      }
+    });
+  }
+
   public getCandidateCount() {
     return this.cells
       .flat()

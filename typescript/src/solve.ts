@@ -31,12 +31,7 @@ const solve = () => {
     process.exit(1);
   }
 
-  board.cells.flat().forEach((cell) => {
-    const value = cell.getValue();
-    if (value !== undefined) {
-      board.removeCandidatesFromPeers(cell.coordinates, value);
-    }
-  });
+  board.initializeCandidates();
 
   const startingCandidateCount = board.getCandidateCount();
   const startingTime = Date.now();

@@ -331,16 +331,38 @@ describe('Board', () => {
   });
 
   describe('removeCandidatesFromPeers', () => {
+    test('remove candidates for one cell', () => {
+      const board = buildBoard(validBoard);
+      const cells = board.cells.flat();
+      // Initial run to remove all candidates from peers
+      board.initializeCandidates();
+
+      const cellToSet = cells[0];
+      const valueToSet = 3;
+      const coordinates = cells[0].coordinates;
+
+      // Remove the candidates
+      board.removeCandidatesFromPeers(coordinates, valueToSet);
+      const unitsForCell = board.getUnitsFromCoordinates(coordinates);
+
+      // Check that candidates are removed
+      unitsForCell.forEach((unit) => {
+        unit.cellCoords.forEach((cellCoords) => {
+          const cell = board.getCellFromCoordinates(cellCoords);
+          if (cell !== cellToSet) {
+            expect(cell.getCandidates()).not.toContainEqual(valueToSet);
+          }
+        });
+      });
+    });
+  });
+
+  describe('initializeCandidates', () => {
     test('remove candidates for initial board', () => {
       const board = buildBoard(validBoard);
       const cells = board.cells.flat();
       // Initial run to remove all candidates from peers
-      cells.forEach((cell) => {
-        const value = cell.getValue();
-        if (value) {
-          board.removeCandidatesFromPeers(cell.coordinates, value);
-        }
-      });
+      board.initializeCandidates();
       // Check that candidates are removed
       cells.forEach((cell) => {
         const peers = board.getPeersFromCoordinates(cell.coordinates);
