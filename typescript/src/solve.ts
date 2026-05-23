@@ -2,6 +2,7 @@ import { parseArgs } from 'node:util';
 import { parse, parseFromFile } from './parser.js';
 import { solveWithBackTracking } from './solver.js';
 import { Board } from './primitives/board.js';
+import { printWithStats } from './printer.js';
 
 const solve = () => {
   const { values } = parseArgs({
@@ -37,8 +38,12 @@ const solve = () => {
     }
   });
 
+  const startingCandidateCount = board.getCandidateCount();
+  const startingTime = Date.now();
   const solvedBoard = solveWithBackTracking(board);
-  console.log(solvedBoard.prettyPrint());
+  console.log(
+    printWithStats(solvedBoard, startingTime, startingCandidateCount)
+  );
 };
 
 solve();

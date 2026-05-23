@@ -381,7 +381,6 @@ describe('Board', () => {
       ];
       const boards = cells.map((board) => buildBoard(board));
       boards.forEach((board) => {
-        // Don't bother coming up with precise numbers for each board, just assert a range
         expect(board.getCandidateCount()).toEqual(0);
       });
     });
