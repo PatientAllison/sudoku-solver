@@ -34,11 +34,11 @@ const solve = () => {
   board.initializeCandidates();
 
   const startingCandidateCount = board.getCandidateCount();
-  const startingTime = Date.now();
+  const startingTime = performance.now();
   const solvedBoard = solveWithLogic(board).board;
-  console.log(
-    printWithStats(solvedBoard, startingTime, startingCandidateCount)
-  );
+  const endingTime = performance.now();
+  const elapsedTime = endingTime - startingTime;
+  console.log(printWithStats(solvedBoard, elapsedTime, startingCandidateCount));
 };
 
 solve();

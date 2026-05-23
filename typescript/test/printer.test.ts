@@ -2,10 +2,8 @@ import { describe, expect, test, vi } from 'vitest';
 import { printWithStats } from '../src/printer';
 import { buildBoard, solvedBoard, validBoard } from './fixtures';
 
-const jan12026 = 1767225600000;
-
 describe('printer', () => {
-  test('Prints board with 0 ms time and no progress', () => {
+  test('Prints board with 0 us time and no progress', () => {
     // Set up board
     const board = buildBoard(validBoard);
     const printedBoard = board.prettyPrint();
@@ -14,11 +12,7 @@ describe('printer', () => {
     const statsLine = /Stats:/;
 
     // Set up time
-    const startingTime = jan12026;
-    const milliseconds = 0;
-    const endTime = startingTime + milliseconds;
-    const duration = endTime - startingTime;
-    vi.setSystemTime(endTime);
+    const elapsedTime = 0;
 
     // Set up progress
     const startingCandidateCount = board.getCandidateCount();
@@ -28,11 +22,67 @@ describe('printer', () => {
         startingCandidateCount) *
       100;
 
-    const result = printWithStats(board, startingTime, startingCandidateCount);
+    const result = printWithStats(board, elapsedTime, startingCandidateCount);
 
     expect(result).toMatch(new RegExp(printedBoard));
     expect(result).toMatch(statsLine);
-    expect(result).toMatch(new RegExp(`Time: ${duration.toString()}ms`));
+    expect(result).toMatch(new RegExp(`Time: ${elapsedTime.toString()}us`));
+    expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
+  });
+
+    test('Prints board with 500 us time and complete', () => {
+    // Set up board
+    const board = buildBoard(validBoard);
+    const printedBoard = board.prettyPrint();
+
+    // Set up stats line
+    const statsLine = /Stats:/;
+
+    // Set up time
+    const elapsedTime = .5;
+    const us = elapsedTime * 1000;
+
+    // Set up progress
+    const startingCandidateCount = board.getCandidateCount();
+    const endingCandidateCount = board.getCandidateCount();
+    const progress =
+      ((startingCandidateCount - endingCandidateCount) /
+        startingCandidateCount) *
+      100;
+
+    const result = printWithStats(board, elapsedTime, startingCandidateCount);
+
+    expect(result).toMatch(new RegExp(printedBoard));
+    expect(result).toMatch(statsLine);
+    expect(result).toMatch(new RegExp(`Time: ${us.toString()}us`));
+    expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
+  });
+
+  test('Prints board with 1.5 mss time and complete', () => {
+    // Set up board
+    const board = buildBoard(validBoard);
+    const printedBoard = board.prettyPrint();
+
+    // Set up stats line
+    const statsLine = /Stats:/;
+
+    // Set up time
+    const elapsedTime = 1.5;
+    const us = elapsedTime * 1000;
+
+    // Set up progress
+    const startingCandidateCount = board.getCandidateCount();
+    const endingCandidateCount = board.getCandidateCount();
+    const progress =
+      ((startingCandidateCount - endingCandidateCount) /
+        startingCandidateCount) *
+      100;
+
+    const result = printWithStats(board, elapsedTime, startingCandidateCount);
+
+    expect(result).toMatch(new RegExp(printedBoard));
+    expect(result).toMatch(statsLine);
+    expect(result).toMatch(new RegExp(`Time: ${us.toString()}us`));
     expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
   });
 
@@ -46,10 +96,7 @@ describe('printer', () => {
     const statsLine = /Stats:/;
 
     // Set up time
-    const startingTime = jan12026;
-    const milliseconds = 50;
-    const endTime = startingTime + milliseconds;
-    vi.setSystemTime(endTime);
+    const elapsedTime = 50;
 
     // Set up progress
     const startingCandidateCount = startingBoard.getCandidateCount();
@@ -61,13 +108,13 @@ describe('printer', () => {
 
     const result = printWithStats(
       finishedBoard,
-      startingTime,
+      elapsedTime,
       startingCandidateCount
     );
 
     expect(result).toMatch(new RegExp(printedBoard));
     expect(result).toMatch(statsLine);
-    expect(result).toMatch(new RegExp(`Time: ${milliseconds.toString()}ms`));
+    expect(result).toMatch(new RegExp(`Time: ${elapsedTime.toString()}ms`));
     expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
   });
 
@@ -81,10 +128,7 @@ describe('printer', () => {
     const statsLine = /Stats:/;
 
     // Set up time
-    const startingTime = jan12026;
-    const milliseconds = 999;
-    const endTime = startingTime + milliseconds;
-    vi.setSystemTime(endTime);
+    const elapsedTime = 999;
 
     // Set up progress
     const startingCandidateCount = startingBoard.getCandidateCount();
@@ -96,14 +140,14 @@ describe('printer', () => {
 
     const result = printWithStats(
       finishedBoard,
-      startingTime,
+      elapsedTime,
       startingCandidateCount
     );
 
     expect(result).toMatch(new RegExp(printedBoard));
     expect(result).toMatch(statsLine);
     expect(result).toMatch(
-      new RegExp(`Time: ${milliseconds.toString().padStart(3, '0')}ms`)
+      new RegExp(`Time: ${elapsedTime.toString().padStart(3, '0')}ms`)
     );
     expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
   });
@@ -118,11 +162,9 @@ describe('printer', () => {
     const statsLine = /Stats:/;
 
     // Set up time
-    const startingTime = jan12026;
     const seconds = 30;
     const milliseconds = 0;
-    const endTime = startingTime + seconds * 1000 + milliseconds;
-    vi.setSystemTime(endTime);
+    const elapsedTime = seconds * 1000 + milliseconds;
 
     // Set up progress
     const startingCandidateCount = startingBoard.getCandidateCount();
@@ -134,7 +176,7 @@ describe('printer', () => {
 
     const result = printWithStats(
       finishedBoard,
-      startingTime,
+      elapsedTime,
       startingCandidateCount
     );
 
@@ -158,11 +200,9 @@ describe('printer', () => {
     const statsLine = /Stats:/;
 
     // Set up time
-    const startingTime = jan12026;
     const seconds = 59;
     const milliseconds = 999;
-    const endTime = startingTime + seconds * 1000 + milliseconds;
-    vi.setSystemTime(endTime);
+    const elapsedTime = seconds * 1000 + milliseconds;
 
     // Set up progress
     const startingCandidateCount = startingBoard.getCandidateCount();
@@ -174,7 +214,7 @@ describe('printer', () => {
 
     const result = printWithStats(
       finishedBoard,
-      startingTime,
+      elapsedTime,
       startingCandidateCount
     );
 
@@ -198,16 +238,13 @@ describe('printer', () => {
     const statsLine = /Stats:/;
 
     // Set up time
-    const startingTime = jan12026;
     const minutes = 1;
     const seconds = 0;
     const milliseconds = 0;
-    const endTime =
-      startingTime + minutes * 60 * 1000 + seconds * 1000 + milliseconds;
+    const elapsedTime = minutes * 60 * 1000 + seconds * 1000 + milliseconds;
     const minutesString = minutes.toString().padStart(2, '0');
     const secondsString = seconds.toString().padStart(2, '0');
     const millisecondsString = milliseconds.toString().padStart(3, '0');
-    vi.setSystemTime(endTime);
 
     // Set up progress
     const startingCandidateCount = startingBoard.getCandidateCount();
@@ -219,7 +256,7 @@ describe('printer', () => {
 
     const result = printWithStats(
       finishedBoard,
-      startingTime,
+      elapsedTime,
       startingCandidateCount
     );
 
@@ -243,16 +280,13 @@ describe('printer', () => {
     const statsLine = /Stats:/;
 
     // Set up time
-    const startingTime = jan12026;
     const minutes = 1;
     const seconds = 30;
     const milliseconds = 500;
-    const endTime =
-      startingTime + minutes * 60 * 1000 + seconds * 1000 + milliseconds;
+    const elapsedTime = minutes * 60 * 1000 + seconds * 1000 + milliseconds;
     const minutesString = minutes.toString().padStart(2, '0');
     const secondsString = seconds.toString().padStart(2, '0');
     const millisecondsString = milliseconds.toString().padStart(3, '0');
-    vi.setSystemTime(endTime);
 
     // Set up progress
     const startingCandidateCount = startingBoard.getCandidateCount();
@@ -264,7 +298,7 @@ describe('printer', () => {
 
     const result = printWithStats(
       finishedBoard,
-      startingTime,
+      elapsedTime,
       startingCandidateCount
     );
 
@@ -288,13 +322,11 @@ describe('printer', () => {
     const statsLine = /Stats:/;
 
     // Set up time
-    const startingTime = jan12026;
     const hours = 1;
     const minutes = 0;
     const seconds = 0;
     const milliseconds = 0;
-    const endTime =
-      startingTime +
+    const elapsedTime =
       hours * 60 * 60 * 1000 +
       minutes * 60 * 1000 +
       seconds * 1000 +
@@ -303,7 +335,6 @@ describe('printer', () => {
     const minutesString = minutes.toString().padStart(2, '0');
     const secondsString = seconds.toString().padStart(2, '0');
     const millisecondsString = milliseconds.toString().padStart(3, '0');
-    vi.setSystemTime(endTime);
 
     // Set up progress
     const startingCandidateCount = startingBoard.getCandidateCount();
@@ -315,7 +346,7 @@ describe('printer', () => {
 
     const result = printWithStats(
       finishedBoard,
-      startingTime,
+      elapsedTime,
       startingCandidateCount
     );
 
@@ -339,13 +370,11 @@ describe('printer', () => {
     const statsLine = /Stats:/;
 
     // Set up time
-    const startingTime = jan12026;
     const hours = 23;
     const minutes = 59;
     const seconds = 59;
     const milliseconds = 59;
-    const endTime =
-      startingTime +
+    const elapsedTime =
       hours * 60 * 60 * 1000 +
       minutes * 60 * 1000 +
       seconds * 1000 +
@@ -354,7 +383,6 @@ describe('printer', () => {
     const minutesString = minutes.toString().padStart(2, '0');
     const secondsString = seconds.toString().padStart(2, '0');
     const millisecondsString = milliseconds.toString().padStart(3, '0');
-    vi.setSystemTime(endTime);
 
     // Set up progress
     const startingCandidateCount = startingBoard.getCandidateCount();
@@ -366,7 +394,7 @@ describe('printer', () => {
 
     const result = printWithStats(
       finishedBoard,
-      startingTime,
+      elapsedTime,
       startingCandidateCount
     );
 
@@ -390,13 +418,11 @@ describe('printer', () => {
     const statsLine = /Stats:/;
 
     // Set up time
-    const startingTime = jan12026;
     const hours = 24;
     const minutes = 0;
     const seconds = 0;
     const milliseconds = 0;
-    const endTime =
-      startingTime +
+    const elapsedTime =
       hours * 60 * 60 * 1000 +
       minutes * 60 * 1000 +
       seconds * 1000 +
@@ -405,7 +431,6 @@ describe('printer', () => {
     const minutesString = minutes.toString().padStart(2, '0');
     const secondsString = seconds.toString().padStart(2, '0');
     const millisecondsString = milliseconds.toString().padStart(3, '0');
-    vi.setSystemTime(endTime);
 
     // Set up progress
     const startingCandidateCount = startingBoard.getCandidateCount();
@@ -417,7 +442,7 @@ describe('printer', () => {
 
     const result = printWithStats(
       finishedBoard,
-      startingTime,
+      elapsedTime,
       startingCandidateCount
     );
 
@@ -441,13 +466,11 @@ describe('printer', () => {
     const statsLine = /Stats:/;
 
     // Set up time
-    const startingTime = jan12026;
     const hours = 168;
     const minutes = 0;
     const seconds = 0;
     const milliseconds = 0;
-    const endTime =
-      startingTime +
+    const elapsedTime =
       hours * 60 * 60 * 1000 +
       minutes * 60 * 1000 +
       seconds * 1000 +
@@ -456,7 +479,6 @@ describe('printer', () => {
     const minutesString = minutes.toString().padStart(2, '0');
     const secondsString = seconds.toString().padStart(2, '0');
     const millisecondsString = milliseconds.toString().padStart(3, '0');
-    vi.setSystemTime(endTime);
 
     // Set up progress
     const startingCandidateCount = startingBoard.getCandidateCount();
@@ -468,7 +490,7 @@ describe('printer', () => {
 
     const result = printWithStats(
       finishedBoard,
-      startingTime,
+      elapsedTime,
       startingCandidateCount
     );
 

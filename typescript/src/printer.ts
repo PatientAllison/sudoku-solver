@@ -10,8 +10,13 @@ const convertMsToDisplayedTime = (elapsedTime: number) => {
 
   // Use 00s000ms format
   if (hours === 0 && minutes === 0) {
-    // Further breakdown the format to just ms
+    // Further breakdown the format to just ms or us
     if (seconds === 0) {
+      // Further breakdown to us
+      if (milliseconds < 2) {
+        const microseconds = Math.floor(elapsedTime * 1000);
+        return `${microseconds.toString()}us`;
+      }
       return `${msString}ms`;
     } else {
       return `${seconds.toString()}s ${msString.padStart(3, '0')}ms`;
@@ -34,14 +39,12 @@ const convertMsToDisplayedTime = (elapsedTime: number) => {
 
 export const printWithStats = (
   board: Board,
-  startingTime: number,
+  elapsedTime: number,
   startingCandidateCount: number
 ) => {
-  const currentTime = Date.now();
   const printedBoard = board.prettyPrint();
   const statsLine = `Stats:`;
-  const timeElapsed = currentTime - startingTime;
-  const timeLine = `Time: ${convertMsToDisplayedTime(timeElapsed)}`;
+  const timeLine = `Time: ${convertMsToDisplayedTime(elapsedTime)}`;
   const currentCandidateCount = board.getCandidateCount();
   const progress =
     ((startingCandidateCount - currentCandidateCount) /
