@@ -164,8 +164,26 @@ export const boardEligibleForNakedSingle = [
   [0, 0, 0,  0, 0, 0,  0, 0, 0],
 ];
 
+// Hidden single: digit 3 can only go at (0,0) in row 0
+// (0,0) has candidates {3, ...} but 3 is blocked from all other empty cells in row 0
+// by column/box constraints
 // prettier-ignore
-export const boardNotEligibleForNakedSingle = [
+export const boardEligibleForHiddenSingle = [
+  [0, 0, 0,  0, 5, 6,  7, 8, 9],
+  [0, 0, 0,  0, 0, 0,  0, 0, 0],
+  [0, 0, 0,  0, 0, 0,  0, 0, 0],
+
+  [0, 3, 0,  0, 0, 0,  0, 0, 0],
+  [0, 0, 3,  0, 0, 0,  0, 0, 0],
+  [0, 0, 0,  3, 0, 0,  0, 0, 0],
+
+  [0, 0, 0,  0, 0, 0,  0, 0, 0],
+  [0, 0, 0,  0, 0, 0,  0, 0, 0],
+  [0, 0, 0,  0, 0, 0,  0, 0, 0],
+];
+
+// prettier-ignore
+export const boardNotEligibleForSingle = [
   [1, 2, 3,  0, 0, 0,  0, 0, 0],
   [4, 5, 6,  0, 0, 0,  0, 0, 9],
   [7, 8, 9,  0, 0, 0,  0, 0, 0],

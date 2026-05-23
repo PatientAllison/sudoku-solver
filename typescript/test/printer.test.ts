@@ -30,7 +30,7 @@ describe('printer', () => {
     expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
   });
 
-    test('Prints board with 500 us time and complete', () => {
+  test('Prints board with 500 us time and complete', () => {
     // Set up board
     const board = buildBoard(validBoard);
     const printedBoard = board.prettyPrint();
@@ -39,7 +39,7 @@ describe('printer', () => {
     const statsLine = /Stats:/;
 
     // Set up time
-    const elapsedTime = .5;
+    const elapsedTime = 0.5;
     const us = elapsedTime * 1000;
 
     // Set up progress

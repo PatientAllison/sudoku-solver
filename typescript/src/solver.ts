@@ -1,5 +1,5 @@
 import { Board } from './primitives/board.js';
-import { nakedSingle } from './techniques.js';
+import { hiddenSingle, nakedSingle } from './techniques.js';
 import { BoardWithProgress } from './types.js';
 
 export const solveWithLogic = (board: Board): BoardWithProgress => {
@@ -10,12 +10,13 @@ export const solveWithLogic = (board: Board): BoardWithProgress => {
     return { board, solved: true };
   }
 
-  const boardWithProgress = nakedSingle(board);
-  if (boardWithProgress.progress) {
-    return solveWithLogic(boardWithProgress.board);
-  } else {
-    return solveWithBackTracking(board);
-  }
+  const nakedSingleApplied = nakedSingle(board);
+  if (nakedSingleApplied.progress)
+    return solveWithLogic(nakedSingleApplied.board);
+  const hiddenSingleApplied = hiddenSingle(board);
+  if (hiddenSingleApplied.progress)
+    return solveWithLogic(hiddenSingleApplied.board);
+  return solveWithBackTracking(board);
 };
 
 export const solveWithBackTracking = (board: Board): BoardWithProgress => {

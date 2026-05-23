@@ -78,9 +78,7 @@ describe('solver', () => {
 
     test('Unsolvable but not conflicting board throws unsolvable error', () => {
       const board = buildBoard(unsolvableBoard);
-      expect(() => solveWithLogic(board)).toThrow(
-        /All candidates exhausted! Board is unsolvable!/
-      );
+      expect(() => solveWithLogic(board)).toThrow(/Board is invalid!/);
     });
   });
 });
