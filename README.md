@@ -44,7 +44,7 @@ Full design documentation, including data models, algorithm pseudocode, and corr
 | Language | Status |
 |----------|--------|
 | TypeScript | ✅ Complete |
-| Kotlin | ⏳ Planned |
+| Kotlin | 🚧 In progress |
 | Java | ⏳ Planned |
 | Python | ⏳ Planned |
 | Ruby | ⏳ Planned |
