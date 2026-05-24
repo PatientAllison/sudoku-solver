@@ -34,7 +34,7 @@ export class Unit {
     // Is Cell count square? (applicable to all unit types)
     if (!isSquarePositiveInteger(unitSize)) {
       throw new Error(
-        `Cell count must be a square postitive integer! Cell Count: ${unitSize}`
+        `Cell count must be a square positive integer! Cell Count: ${unitSize}`
       );
     }
 

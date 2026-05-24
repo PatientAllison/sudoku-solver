@@ -11,6 +11,10 @@ describe('Utils', () => {
       expect(isPositiveInteger(2.5)).toBe(false);
     });
 
+    test('Returns false for 0', () => {
+      expect(isPositiveInteger(0)).toBe(false);
+    });
+
     test('Returns true for positive integer number', () => {
       expect(isPositiveInteger(3)).toBe(true);
     });
@@ -19,6 +23,10 @@ describe('Utils', () => {
   describe('isSquarePositiveInteger', () => {
     test('Returns false for negative number', () => {
       expect(isSquarePositiveInteger(-4)).toBe(false);
+    });
+
+    test('Returns false for 0', () => {
+      expect(isSquarePositiveInteger(0)).toBe(false);
     });
 
     test('Returns false for non-integer number', () => {

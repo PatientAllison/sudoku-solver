@@ -45,7 +45,7 @@ export class Cell {
     if (!this.skipValidations) {
       if (!isSquarePositiveInteger(unitSize)) {
         throw new Error(
-          `Unit size must be a square postitive integer! Unit size: ${unitSize}`
+          `Unit size must be a square positive integer! Unit size: ${unitSize}`
         );
       } else if (coordinates.col >= unitSize) {
         throw new Error(
@@ -114,7 +114,7 @@ export class Cell {
       !this.skipValidations
     ) {
       throw new Error(
-        'This cell already has a different value!' +
+        'This cell already has a different value! ' +
           `Row: ${this.coordinates.row}, ` +
           `Col: ${this.coordinates.col}, ` +
           `Existing Value: ${this.value}, ` +

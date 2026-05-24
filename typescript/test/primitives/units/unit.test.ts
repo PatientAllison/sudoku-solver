@@ -108,7 +108,7 @@ describe('Unit (constructor validation)', () => {
 
   describe('Invalid Units', () => {
     describe('Non-square cellCoord arrays', () => {
-      const errorRegex = /Cell count must be a square postitive integer!/;
+      const errorRegex = /Cell count must be a square positive integer!/;
       beforeEach(() => {
         mockIsSquare.mockReturnValue(false);
       });

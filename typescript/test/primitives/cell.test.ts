@@ -70,7 +70,7 @@ describe('Cell', () => {
             coordinates,
             unitSize: 10,
           })
-      ).toThrow(/Unit size must be a square postitive integer!/);
+      ).toThrow(/Unit size must be a square positive integer!/);
     });
 
     test('Column out of bounds throws an error', () => {
