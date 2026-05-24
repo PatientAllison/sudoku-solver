@@ -180,38 +180,38 @@ Implement each technique as a standalone function. Each returns `true` if it mad
   - Filter on `cell.value === 0` when scanning candidates
   - _Requirements: 6.1_
 
-- [ ] 6.3 Implement `applyNakedPair`
-  - For each unit, find pairs of empty cells with identical 2-element candidate sets; eliminate those two digits from all other empty cells in the unit
+- [ ] 6.3 ~~Implement `applyNakedPair`~~ *(Out of scope)*
+  - ~~For each unit, find pairs of empty cells with identical 2-element candidate sets; eliminate those two digits from all other empty cells in the unit~~
   - _Requirements: 6.2_
 
-- [ ] 6.4 Implement `applyHiddenPair`
-  - For each unit, find pairs of digits that appear in exactly the same two empty cells; remove all other candidates from those two cells
+- [ ] 6.4 ~~Implement `applyHiddenPair`~~ *(Out of scope)*
+  - ~~For each unit, find pairs of digits that appear in exactly the same two empty cells; remove all other candidates from those two cells~~
   - _Requirements: 6.2_
 
-- [ ] 6.5 Implement `applyPointingPair`
-  - For each box, for each digit: if all candidates for that digit in the box lie in a single row or column, eliminate the digit from the rest of that row/column outside the box
+- [ ] 6.5 ~~Implement `applyPointingPair`~~ *(Out of scope)*
+  - ~~For each box, for each digit: if all candidates for that digit in the box lie in a single row or column, eliminate the digit from the rest of that row/column outside the box~~
   - _Requirements: 6.2_
 
-- [ ] 6.6 Implement `applyBoxLineReduction`
-  - For each row/column, for each digit: if all candidates for that digit in the row/column lie in a single box, eliminate the digit from the rest of that box
+- [ ] 6.6 ~~Implement `applyBoxLineReduction`~~ *(Out of scope)*
+  - ~~For each row/column, for each digit: if all candidates for that digit in the row/column lie in a single box, eliminate the digit from the rest of that box~~
   - _Requirements: 6.2_
 
-- [ ] 6.7 Implement `applyNakedTriple`
-  - For each unit, find triples of empty cells whose candidate union has exactly 3 digits; eliminate those digits from all other empty cells in the unit
+- [ ] 6.7 ~~Implement `applyNakedTriple`~~ *(Out of scope)*
+  - ~~For each unit, find triples of empty cells whose candidate union has exactly 3 digits; eliminate those digits from all other empty cells in the unit~~
   - _Requirements: 6.3_
 
-- [ ] 6.8 Implement `applyHiddenTriple`
-  - For each unit, find triples of digits that appear only within the same three empty cells; remove all other candidates from those three cells
+- [ ] 6.8 ~~Implement `applyHiddenTriple`~~ *(Out of scope)*
+  - ~~For each unit, find triples of digits that appear only within the same three empty cells; remove all other candidates from those three cells~~
   - _Requirements: 6.3_
 
-- [ ] 6.9 Implement `applyXWing`
-  - Row-based: find two rows where a digit appears in exactly two empty cells sharing the same two columns; eliminate from those columns elsewhere
-  - Column-based: same logic transposed
+- [ ] 6.9 ~~Implement `applyXWing`~~ *(Out of scope)*
+  - ~~Row-based: find two rows where a digit appears in exactly two empty cells sharing the same two columns; eliminate from those columns elsewhere~~
+  - ~~Column-based: same logic transposed~~
   - _Requirements: 6.3_
 
-- [ ] 6.10 Implement `applySwordfish`
-  - Row-based: find three rows where a digit appears in 2–3 empty cells all within the same three columns; eliminate from those columns elsewhere
-  - Column-based: same logic transposed
+- [ ] 6.10 ~~Implement `applySwordfish`~~ *(Out of scope)*
+  - ~~Row-based: find three rows where a digit appears in 2–3 empty cells all within the same three columns; eliminate from those columns elsewhere~~
+  - ~~Column-based: same logic transposed~~
   - _Requirements: 6.3_
 
 - [ ] 6.11 Write unit tests for logic techniques in `src/solver.test.ts`

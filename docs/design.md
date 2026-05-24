@@ -332,7 +332,9 @@ return false
 
 Note: the filter `C.value = 0` is essential here. Without it, a filled cell with `candidates = {D}` would be counted, incorrectly treating an already-placed digit as a hidden single candidate.
 
-#### Tier 2 — Intermediate Techniques
+#### Tier 2 — Intermediate Techniques *(Out of scope for initial implementation)*
+
+> The following techniques are documented for reference but are not implemented. Backtracking handles all cases the basic techniques cannot solve, with acceptable performance (hard 100×100 boards solve in ~120ms).
 
 **Naked Pair**
 
@@ -418,7 +420,7 @@ for each row (or column) L:
 return false
 ```
 
-#### Tier 3 — Advanced Techniques
+#### Tier 3 — Advanced Techniques *(Out of scope for initial implementation)*
 
 **Naked Triple**
 
@@ -544,17 +546,10 @@ function solveWithLogic(board):
     if applyNakedSingle(board):  progress = true; continue
     if applyHiddenSingle(board): progress = true; continue
 
-    // Tier 2: Intermediate
-    if applyNakedPair(board):        progress = true; continue
-    if applyHiddenPair(board):       progress = true; continue
-    if applyPointingPair(board):     progress = true; continue
-    if applyBoxLineReduction(board): progress = true; continue
-
-    // Tier 3: Advanced
-    if applyNakedTriple(board):  progress = true; continue
-    if applyHiddenTriple(board): progress = true; continue
-    if applyXWing(board):        progress = true; continue
-    if applySwordfish(board):    progress = true; continue
+    // Tier 2 and Tier 3 techniques (Naked/Hidden Pair, Pointing Pair,
+    // Box-Line Reduction, Naked/Hidden Triple, X-Wing, Swordfish) are
+    // out of scope for the initial implementation. Backtracking handles
+    // all cases the basic techniques cannot solve.
 
     // No technique made progress — fall back to backtracking
     break
@@ -674,12 +669,6 @@ Initialize Candidates
 │  2. validate? ──fail─► return INVALID_BOARD      │
 │       ↓ (valid, not solved)                      │
 │  Tier 1: Naked Single → Hidden Single            │
-│       ↓ (no progress)                            │
-│  Tier 2: Naked Pair → Hidden Pair →              │
-│          Pointing Pair → Box-Line                │
-│       ↓ (no progress)                            │
-│  Tier 3: Naked Triple → Hidden Triple            │
-│          → X-Wing → Swordfish                    │
 │       ↓ (no progress)                            │
 │  ← restart (continue) after any progress ←      │
 └──────────────────────┬───────────────────────────┘

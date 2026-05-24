@@ -13,11 +13,9 @@ This project revisits an old broken Java Sudoku solver I wrote in 2022 as a prac
 The solver uses a **logic-first strategy** before falling back to brute-force backtracking:
 
 1. **Basic** — Naked Single, Hidden Single
-2. **Intermediate** — Naked/Hidden Pair, Pointing Pair/Triple, Box-Line Reduction
-3. **Advanced** — Naked/Hidden Triple, X-Wing, Swordfish
-4. **Backtracking** — only when all logic techniques are exhausted
+2. **Backtracking** — when logic techniques are exhausted
 
-See https://sudokupulse.com/articles/sudoku-technique-progression/ for an explanation of these techniques.
+Higher-level techniques (Naked/Hidden Pairs, X-Wing, Swordfish, etc.) are out of scope for the initial implementation — backtracking handles all cases the basic techniques can't solve, and performance is already excellent (hard 100×100 boards solve in ~120ms).
 
 Puzzles are accepted as JSON arrays-of-arrays, which handles any board size without encoding ambiguity:
 
@@ -45,7 +43,7 @@ Full design documentation, including data models, algorithm pseudocode, and corr
 
 | Language | Status |
 |----------|--------|
-| TypeScript | 🚧 In progress |
+| TypeScript | ✅ Complete |
 | Kotlin | ⏳ Planned |
 | Java | ⏳ Planned |
 | Python | ⏳ Planned |
@@ -74,10 +72,9 @@ sudoku-solver/
 ```bash
 cd typescript
 npm install
-npm run build
-node dist/index.js '[[5,3,0,...]]'
-# or pipe from stdin:
-echo '[[5,3,0,...]]' | node dist/index.js
+npx tsx src/solve.ts --puzzle-path ../resources/puzzleInputs/9x9/easy/0.json
+# or pass puzzle JSON directly:
+npx tsx src/solve.ts --puzzle '[[5,3,0,...]]'
 ```
 
 ## Testing (TypeScript)

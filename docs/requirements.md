@@ -118,21 +118,21 @@ The primary target is the standard 9×9 puzzle, but the design must remain open 
    - **Naked Single**: IF a Cell's Candidate Set contains exactly one Digit, THEN place that Digit in the Cell.
    - **Hidden Single**: IF a Digit appears in the Candidate Sets of exactly one Cell within a Unit, THEN place that Digit in that Cell.
 
-2. THE Solver SHALL implement the following Intermediate techniques:
-   - **Naked Pair**: IF exactly two Cells in a Unit share the same Candidate Set of exactly two Digits, THEN eliminate those two Digits from the Candidate Sets of all other Cells in that Unit.
-   - **Hidden Pair**: IF exactly two Digits each appear in the Candidate Sets of only the same two Cells within a Unit, THEN remove all other candidates from those two Cells.
-   - **Pointing Pair/Triple**: IF a Digit's candidates within a Box are all confined to a single Row or Column, THEN eliminate that Digit from the Candidate Sets of all other Cells in that Row or Column outside the Box.
-   - **Box-Line Reduction**: IF a Digit's candidates within a Row or Column are all confined to a single Box, THEN eliminate that Digit from the Candidate Sets of all other Cells in that Box.
+2. *(Out of scope)* ~~THE Solver SHALL implement the following Intermediate techniques:~~
+   - ~~**Naked Pair**: IF exactly two Cells in a Unit share the same Candidate Set of exactly two Digits, THEN eliminate those two Digits from the Candidate Sets of all other Cells in that Unit.~~
+   - ~~**Hidden Pair**: IF exactly two Digits each appear in the Candidate Sets of only the same two Cells within a Unit, THEN remove all other candidates from those two Cells.~~
+   - ~~**Pointing Pair/Triple**: IF a Digit's candidates within a Box are all confined to a single Row or Column, THEN eliminate that Digit from the Candidate Sets of all other Cells in that Row or Column outside the Box.~~
+   - ~~**Box-Line Reduction**: IF a Digit's candidates within a Row or Column are all confined to a single Box, THEN eliminate that Digit from the Candidate Sets of all other Cells in that Box.~~
 
-3. THE Solver SHALL implement the following Advanced techniques:
-   - **Naked Triple**: IF exactly three Cells in a Unit have Candidate Sets that are subsets of the same three Digits, THEN eliminate those three Digits from the Candidate Sets of all other Cells in that Unit.
-   - **Hidden Triple**: IF exactly three Digits each appear only within the same three Cells of a Unit, THEN remove all other candidates from those three Cells.
-   - **X-Wing**: IF a Digit appears in exactly two Cells in each of two Rows, and those four Cells share the same two Columns, THEN eliminate that Digit from all other Cells in those two Columns. The same rule applies with Rows and Columns swapped.
-   - **Swordfish**: IF a Digit appears in exactly two or three Cells in each of three Rows, and all such Cells fall within the same three Columns, THEN eliminate that Digit from all other Cells in those three Columns. The same rule applies with Rows and Columns swapped.
+3. *(Out of scope)* ~~THE Solver SHALL implement the following Advanced techniques:~~
+   - ~~**Naked Triple**: IF exactly three Cells in a Unit have Candidate Sets that are subsets of the same three Digits, THEN eliminate those three Digits from the Candidate Sets of all other Cells in that Unit.~~
+   - ~~**Hidden Triple**: IF exactly three Digits each appear only within the same three Cells of a Unit, THEN remove all other candidates from those three Cells.~~
+   - ~~**X-Wing**: IF a Digit appears in exactly two Cells in each of two Rows, and those four Cells share the same two Columns, THEN eliminate that Digit from all other Cells in those two Columns. The same rule applies with Rows and Columns swapped.~~
+   - ~~**Swordfish**: IF a Digit appears in exactly two or three Cells in each of three Rows, and all such Cells fall within the same three Columns, THEN eliminate that Digit from all other Cells in those three Columns. The same rule applies with Rows and Columns swapped.~~
 
 4. WHEN a technique from a lower complexity tier makes progress, THE Solver SHALL not apply a higher-tier technique until all lower-tier techniques are exhausted again.
 
-5. WHEN none of the Logic Techniques in Requirements 6.1–6.3 make progress, THE Solver SHALL fall back to backtracking as defined in Requirement 4.
+5. WHEN none of the implemented Logic Techniques make progress, THE Solver SHALL fall back to backtracking as defined in Requirement 4.
 
 ---
 
