@@ -4,9 +4,15 @@ import dev.patientallison.sudoku.Coordinates
 import dev.patientallison.sudoku.isPositive
 import dev.patientallison.sudoku.isPositiveSquare
 
+/**
+ * Creates a Cell, performing appropriate validations for  along the way
+ * @param coordinates Coordinates of the Cell within the Board
+ * @param unitSize Size of a unit for the board (used in calculating candidates and cloning)
+ * @throws IllegalArgumentException if the house is invalid somehow
+ */
 class Cell(
     val coordinates: Coordinates,
-    val unitSize: Int,
+    private val unitSize: Int,
     givenValue: Int? = null,
 ) {
     val isGiven = givenValue != null
