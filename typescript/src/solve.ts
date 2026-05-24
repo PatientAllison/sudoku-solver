@@ -2,7 +2,7 @@ import { parseArgs } from 'node:util';
 import { parse, parseFromFile } from './parser.js';
 import { solveWithLogic } from './solver.js';
 import { Board } from './primitives/board.js';
-import { printWithStats } from './printer.js';
+import { printWithTime } from './printer.js';
 
 const solve = () => {
   const { values } = parseArgs({
@@ -33,12 +33,11 @@ const solve = () => {
 
   board.initializeCandidates();
 
-  const startingCandidateCount = board.getCandidateCount();
   const startingTime = performance.now();
   const solvedBoard = solveWithLogic(board).board;
   const endingTime = performance.now();
   const elapsedTime = endingTime - startingTime;
-  console.log(printWithStats(solvedBoard, elapsedTime, startingCandidateCount));
+  console.log(printWithTime(solvedBoard, elapsedTime));
 };
 
 solve();

@@ -37,28 +37,15 @@ const convertMsToDisplayedTime = (elapsedTime: number) => {
   }
 };
 
-export const printWithStats = (
-  board: Board,
-  elapsedTime: number,
-  startingCandidateCount: number
-) => {
+export const printWithTime = (board: Board, elapsedTime: number) => {
   const printedBoard = board.prettyPrint();
-  const statsLine = `Stats:`;
   const timeLine = `Time: ${convertMsToDisplayedTime(elapsedTime)}`;
-  const currentCandidateCount = board.getCandidateCount();
-  const progress =
-    ((startingCandidateCount - currentCandidateCount) /
-      startingCandidateCount) *
-    100;
-  const progressLine = `Progress: ${progress.toString()}%`;
   const newLine = '\n';
 
   const result = [
     printedBoard,
-    newLine, // empty line between board and stats
-    statsLine,
+    newLine, // empty line between board and time
     timeLine,
-    progressLine,
   ];
 
   return result.join(newLine);

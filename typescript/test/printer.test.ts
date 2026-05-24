@@ -1,241 +1,112 @@
 import { describe, expect, test, vi } from 'vitest';
-import { printWithStats } from '../src/printer';
+import { printWithTime } from '../src/printer';
 import { buildBoard, solvedBoard, validBoard } from './fixtures';
 
-describe('printer', () => {
-  test('Prints board with 0 us time and no progress', () => {
+describe('printWithTime', () => {
+  test('Prints board with 500 us time', () => {
     // Set up board
     const board = buildBoard(validBoard);
     const printedBoard = board.prettyPrint();
-
-    // Set up stats line
-    const statsLine = /Stats:/;
-
-    // Set up time
-    const elapsedTime = 0;
-
-    // Set up progress
-    const startingCandidateCount = board.getCandidateCount();
-    const endingCandidateCount = board.getCandidateCount();
-    const progress =
-      ((startingCandidateCount - endingCandidateCount) /
-        startingCandidateCount) *
-      100;
-
-    const result = printWithStats(board, elapsedTime, startingCandidateCount);
-
-    expect(result).toMatch(new RegExp(printedBoard));
-    expect(result).toMatch(statsLine);
-    expect(result).toMatch(new RegExp(`Time: ${elapsedTime.toString()}us`));
-    expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
-  });
-
-  test('Prints board with 500 us time and complete', () => {
-    // Set up board
-    const board = buildBoard(validBoard);
-    const printedBoard = board.prettyPrint();
-
-    // Set up stats line
-    const statsLine = /Stats:/;
 
     // Set up time
     const elapsedTime = 0.5;
     const us = elapsedTime * 1000;
 
-    // Set up progress
-    const startingCandidateCount = board.getCandidateCount();
-    const endingCandidateCount = board.getCandidateCount();
-    const progress =
-      ((startingCandidateCount - endingCandidateCount) /
-        startingCandidateCount) *
-      100;
-
-    const result = printWithStats(board, elapsedTime, startingCandidateCount);
+    const result = printWithTime(board, elapsedTime);
 
     expect(result).toMatch(new RegExp(printedBoard));
-    expect(result).toMatch(statsLine);
     expect(result).toMatch(new RegExp(`Time: ${us.toString()}us`));
-    expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
   });
 
-  test('Prints board with 1.5 mss time and complete', () => {
+  test('Prints board with 1.5 ms time', () => {
     // Set up board
     const board = buildBoard(validBoard);
     const printedBoard = board.prettyPrint();
-
-    // Set up stats line
-    const statsLine = /Stats:/;
 
     // Set up time
     const elapsedTime = 1.5;
     const us = elapsedTime * 1000;
 
-    // Set up progress
-    const startingCandidateCount = board.getCandidateCount();
-    const endingCandidateCount = board.getCandidateCount();
-    const progress =
-      ((startingCandidateCount - endingCandidateCount) /
-        startingCandidateCount) *
-      100;
-
-    const result = printWithStats(board, elapsedTime, startingCandidateCount);
+    const result = printWithTime(board, elapsedTime);
 
     expect(result).toMatch(new RegExp(printedBoard));
-    expect(result).toMatch(statsLine);
     expect(result).toMatch(new RegExp(`Time: ${us.toString()}us`));
-    expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
   });
 
-  test('Prints board with 50ms time and complete', () => {
+  test('Prints board with 50ms time', () => {
     // Set up board
-    const startingBoard = buildBoard(validBoard);
     const finishedBoard = buildBoard(solvedBoard);
     const printedBoard = finishedBoard.prettyPrint();
-
-    // Set up stats line
-    const statsLine = /Stats:/;
 
     // Set up time
     const elapsedTime = 50;
 
-    // Set up progress
-    const startingCandidateCount = startingBoard.getCandidateCount();
-    const endingCandidateCount = finishedBoard.getCandidateCount();
-    const progress =
-      ((startingCandidateCount - endingCandidateCount) /
-        startingCandidateCount) *
-      100;
-
-    const result = printWithStats(
-      finishedBoard,
-      elapsedTime,
-      startingCandidateCount
-    );
+    const result = printWithTime(finishedBoard, elapsedTime);
 
     expect(result).toMatch(new RegExp(printedBoard));
-    expect(result).toMatch(statsLine);
     expect(result).toMatch(new RegExp(`Time: ${elapsedTime.toString()}ms`));
-    expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
   });
 
-  test('Prints board with 999ms time and complete', () => {
+  test('Prints board with 999ms time', () => {
     // Set up board
-    const startingBoard = buildBoard(validBoard);
     const finishedBoard = buildBoard(solvedBoard);
     const printedBoard = finishedBoard.prettyPrint();
-
-    // Set up stats line
-    const statsLine = /Stats:/;
 
     // Set up time
     const elapsedTime = 999;
 
-    // Set up progress
-    const startingCandidateCount = startingBoard.getCandidateCount();
-    const endingCandidateCount = finishedBoard.getCandidateCount();
-    const progress =
-      ((startingCandidateCount - endingCandidateCount) /
-        startingCandidateCount) *
-      100;
-
-    const result = printWithStats(
-      finishedBoard,
-      elapsedTime,
-      startingCandidateCount
-    );
+    const result = printWithTime(finishedBoard, elapsedTime);
 
     expect(result).toMatch(new RegExp(printedBoard));
-    expect(result).toMatch(statsLine);
     expect(result).toMatch(
       new RegExp(`Time: ${elapsedTime.toString().padStart(3, '0')}ms`)
     );
-    expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
   });
 
-  test('Prints board with 30s time and complete', () => {
+  test('Prints board with 30s time', () => {
     // Set up board
-    const startingBoard = buildBoard(validBoard);
     const finishedBoard = buildBoard(solvedBoard);
     const printedBoard = finishedBoard.prettyPrint();
-
-    // Set up stats line
-    const statsLine = /Stats:/;
 
     // Set up time
     const seconds = 30;
     const milliseconds = 0;
     const elapsedTime = seconds * 1000 + milliseconds;
 
-    // Set up progress
-    const startingCandidateCount = startingBoard.getCandidateCount();
-    const endingCandidateCount = finishedBoard.getCandidateCount();
-    const progress =
-      ((startingCandidateCount - endingCandidateCount) /
-        startingCandidateCount) *
-      100;
-
-    const result = printWithStats(
-      finishedBoard,
-      elapsedTime,
-      startingCandidateCount
-    );
+    const result = printWithTime(finishedBoard, elapsedTime);
 
     expect(result).toMatch(new RegExp(printedBoard));
-    expect(result).toMatch(statsLine);
     expect(result).toMatch(
       new RegExp(
         `Time: ${seconds.toString().padStart(2, '0')}s ${milliseconds.toString().padStart(3, '0')}ms`
       )
     );
-    expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
   });
 
-  test('Prints board with 59.999 time and complete', () => {
+  test('Prints board with 59.999 time', () => {
     // Set up board
-    const startingBoard = buildBoard(validBoard);
     const finishedBoard = buildBoard(solvedBoard);
     const printedBoard = finishedBoard.prettyPrint();
-
-    // Set up stats line
-    const statsLine = /Stats:/;
 
     // Set up time
     const seconds = 59;
     const milliseconds = 999;
     const elapsedTime = seconds * 1000 + milliseconds;
 
-    // Set up progress
-    const startingCandidateCount = startingBoard.getCandidateCount();
-    const endingCandidateCount = finishedBoard.getCandidateCount();
-    const progress =
-      ((startingCandidateCount - endingCandidateCount) /
-        startingCandidateCount) *
-      100;
-
-    const result = printWithStats(
-      finishedBoard,
-      elapsedTime,
-      startingCandidateCount
-    );
+    const result = printWithTime(finishedBoard, elapsedTime);
 
     expect(result).toMatch(new RegExp(printedBoard));
-    expect(result).toMatch(statsLine);
     expect(result).toMatch(
       new RegExp(
         `Time: ${seconds.toString().padStart(2, '0')}s ${milliseconds.toString().padStart(3, '0')}ms`
       )
     );
-    expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
   });
 
-  test('Prints board with 1m time and complete', () => {
+  test('Prints board with 1m time', () => {
     // Set up board
-    const startingBoard = buildBoard(validBoard);
     const finishedBoard = buildBoard(solvedBoard);
     const printedBoard = finishedBoard.prettyPrint();
-
-    // Set up stats line
-    const statsLine = /Stats:/;
 
     // Set up time
     const minutes = 1;
@@ -246,38 +117,20 @@ describe('printer', () => {
     const secondsString = seconds.toString().padStart(2, '0');
     const millisecondsString = milliseconds.toString().padStart(3, '0');
 
-    // Set up progress
-    const startingCandidateCount = startingBoard.getCandidateCount();
-    const endingCandidateCount = finishedBoard.getCandidateCount();
-    const progress =
-      ((startingCandidateCount - endingCandidateCount) /
-        startingCandidateCount) *
-      100;
-
-    const result = printWithStats(
-      finishedBoard,
-      elapsedTime,
-      startingCandidateCount
-    );
+    const result = printWithTime(finishedBoard, elapsedTime);
 
     expect(result).toMatch(new RegExp(printedBoard));
-    expect(result).toMatch(statsLine);
     expect(result).toMatch(
       new RegExp(
         `Time: ${[minutesString, secondsString].join(':')}.${millisecondsString}`
       )
     );
-    expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
   });
 
-  test('Prints board with 1m30s500ms time and complete', () => {
+  test('Prints board with 1m30s500ms time', () => {
     // Set up board
-    const startingBoard = buildBoard(validBoard);
     const finishedBoard = buildBoard(solvedBoard);
     const printedBoard = finishedBoard.prettyPrint();
-
-    // Set up stats line
-    const statsLine = /Stats:/;
 
     // Set up time
     const minutes = 1;
@@ -288,38 +141,20 @@ describe('printer', () => {
     const secondsString = seconds.toString().padStart(2, '0');
     const millisecondsString = milliseconds.toString().padStart(3, '0');
 
-    // Set up progress
-    const startingCandidateCount = startingBoard.getCandidateCount();
-    const endingCandidateCount = finishedBoard.getCandidateCount();
-    const progress =
-      ((startingCandidateCount - endingCandidateCount) /
-        startingCandidateCount) *
-      100;
-
-    const result = printWithStats(
-      finishedBoard,
-      elapsedTime,
-      startingCandidateCount
-    );
+    const result = printWithTime(finishedBoard, elapsedTime);
 
     expect(result).toMatch(new RegExp(printedBoard));
-    expect(result).toMatch(statsLine);
     expect(result).toMatch(
       new RegExp(
         `Time: ${[minutesString, secondsString].join(':')}.${millisecondsString}`
       )
     );
-    expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
   });
 
-  test('Prints board with 1h time and complete', () => {
+  test('Prints board with 1h time', () => {
     // Set up board
-    const startingBoard = buildBoard(validBoard);
     const finishedBoard = buildBoard(solvedBoard);
     const printedBoard = finishedBoard.prettyPrint();
-
-    // Set up stats line
-    const statsLine = /Stats:/;
 
     // Set up time
     const hours = 1;
@@ -336,38 +171,20 @@ describe('printer', () => {
     const secondsString = seconds.toString().padStart(2, '0');
     const millisecondsString = milliseconds.toString().padStart(3, '0');
 
-    // Set up progress
-    const startingCandidateCount = startingBoard.getCandidateCount();
-    const endingCandidateCount = finishedBoard.getCandidateCount();
-    const progress =
-      ((startingCandidateCount - endingCandidateCount) /
-        startingCandidateCount) *
-      100;
-
-    const result = printWithStats(
-      finishedBoard,
-      elapsedTime,
-      startingCandidateCount
-    );
+    const result = printWithTime(finishedBoard, elapsedTime);
 
     expect(result).toMatch(new RegExp(printedBoard));
-    expect(result).toMatch(statsLine);
     expect(result).toMatch(
       new RegExp(
         `Time: ${[hoursString, minutesString, secondsString].join(':')}.${millisecondsString}`
       )
     );
-    expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
   });
 
-  test('Prints board with 23h59m59s999ms time and complete', () => {
+  test('Prints board with 23h59m59s999ms time', () => {
     // Set up board
-    const startingBoard = buildBoard(validBoard);
     const finishedBoard = buildBoard(solvedBoard);
     const printedBoard = finishedBoard.prettyPrint();
-
-    // Set up stats line
-    const statsLine = /Stats:/;
 
     // Set up time
     const hours = 23;
@@ -384,38 +201,20 @@ describe('printer', () => {
     const secondsString = seconds.toString().padStart(2, '0');
     const millisecondsString = milliseconds.toString().padStart(3, '0');
 
-    // Set up progress
-    const startingCandidateCount = startingBoard.getCandidateCount();
-    const endingCandidateCount = finishedBoard.getCandidateCount();
-    const progress =
-      ((startingCandidateCount - endingCandidateCount) /
-        startingCandidateCount) *
-      100;
-
-    const result = printWithStats(
-      finishedBoard,
-      elapsedTime,
-      startingCandidateCount
-    );
+    const result = printWithTime(finishedBoard, elapsedTime);
 
     expect(result).toMatch(new RegExp(printedBoard));
-    expect(result).toMatch(statsLine);
     expect(result).toMatch(
       new RegExp(
         `Time: ${[hoursString, minutesString, secondsString].join(':')}.${millisecondsString}`
       )
     );
-    expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
   });
 
-  test('Prints board with 24h time and complete', () => {
+  test('Prints board with 24h time', () => {
     // Set up board
-    const startingBoard = buildBoard(validBoard);
     const finishedBoard = buildBoard(solvedBoard);
     const printedBoard = finishedBoard.prettyPrint();
-
-    // Set up stats line
-    const statsLine = /Stats:/;
 
     // Set up time
     const hours = 24;
@@ -432,38 +231,20 @@ describe('printer', () => {
     const secondsString = seconds.toString().padStart(2, '0');
     const millisecondsString = milliseconds.toString().padStart(3, '0');
 
-    // Set up progress
-    const startingCandidateCount = startingBoard.getCandidateCount();
-    const endingCandidateCount = finishedBoard.getCandidateCount();
-    const progress =
-      ((startingCandidateCount - endingCandidateCount) /
-        startingCandidateCount) *
-      100;
-
-    const result = printWithStats(
-      finishedBoard,
-      elapsedTime,
-      startingCandidateCount
-    );
+    const result = printWithTime(finishedBoard, elapsedTime);
 
     expect(result).toMatch(new RegExp(printedBoard));
-    expect(result).toMatch(statsLine);
     expect(result).toMatch(
       new RegExp(
         `Time: ${[hoursString, minutesString, secondsString].join(':')}.${millisecondsString}`
       )
     );
-    expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
   });
 
-  test('Prints board with 1 week time and complete', () => {
+  test('Prints board with 1 week time', () => {
     // Set up board
-    const startingBoard = buildBoard(validBoard);
     const finishedBoard = buildBoard(solvedBoard);
     const printedBoard = finishedBoard.prettyPrint();
-
-    // Set up stats line
-    const statsLine = /Stats:/;
 
     // Set up time
     const hours = 168;
@@ -480,27 +261,13 @@ describe('printer', () => {
     const secondsString = seconds.toString().padStart(2, '0');
     const millisecondsString = milliseconds.toString().padStart(3, '0');
 
-    // Set up progress
-    const startingCandidateCount = startingBoard.getCandidateCount();
-    const endingCandidateCount = finishedBoard.getCandidateCount();
-    const progress =
-      ((startingCandidateCount - endingCandidateCount) /
-        startingCandidateCount) *
-      100;
-
-    const result = printWithStats(
-      finishedBoard,
-      elapsedTime,
-      startingCandidateCount
-    );
+    const result = printWithTime(finishedBoard, elapsedTime);
 
     expect(result).toMatch(new RegExp(printedBoard));
-    expect(result).toMatch(statsLine);
     expect(result).toMatch(
       new RegExp(
         `Time: ${[hoursString, minutesString, secondsString].join(':')}.${millisecondsString}`
       )
     );
-    expect(result).toMatch(new RegExp(`Progress: ${progress}%`));
   });
 });
