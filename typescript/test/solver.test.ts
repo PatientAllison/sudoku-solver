@@ -6,10 +6,17 @@ import {
   solvedBoard,
   rowConflict,
   unsolvableBoard,
+  hundredByHundredBoard,
+  solvedHundredByHundredBoard,
+  hardNineByNineBoard,
+  solvedHardNineByNineBoard,
+  evilNineByNineBoard,
+  solvedEvilNineByNineBoard,
 } from './fixtures';
+
 describe('solver', () => {
   describe('solveWithBacktracking', () => {
-    test('Solvable board is solved', () => {
+    test('Easy 9x9 board is solved', () => {
       const board = buildBoard(validBoard);
       board.initializeCandidates();
       const solvedBoardWithProgress = solveWithBackTracking(board);
@@ -18,6 +25,47 @@ describe('solver', () => {
         row.map((cell) => cell.getValue())
       );
       expect(solvedValues).toEqual(solvedBoard);
+      expect(solvedBoardWithProgress.solved).toEqual(true);
+      expect(solvedBoardWithProgress.progress).toBeUndefined();
+    });
+
+    test('Hard 9x9 board is solved', () => {
+      const board = buildBoard(hardNineByNineBoard);
+      board.initializeCandidates();
+      const solvedBoardWithProgress = solveWithBackTracking(board);
+      const solvedCells = solvedBoardWithProgress.board.cells;
+      const solvedValues = solvedCells.map((row) =>
+        row.map((cell) => cell.getValue())
+      );
+      expect(solvedValues).toEqual(solvedHardNineByNineBoard);
+      expect(solvedBoardWithProgress.solved).toEqual(true);
+      expect(solvedBoardWithProgress.progress).toBeUndefined();
+    });
+
+    test('Evil 9x9 board is solved', () => {
+      const board = buildBoard(evilNineByNineBoard);
+      board.initializeCandidates();
+      const solvedBoardWithProgress = solveWithBackTracking(board);
+      const solvedCells = solvedBoardWithProgress.board.cells;
+      const solvedValues = solvedCells.map((row) =>
+        row.map((cell) => cell.getValue())
+      );
+      expect(solvedValues).toEqual(solvedEvilNineByNineBoard);
+      expect(solvedBoardWithProgress.solved).toEqual(true);
+      expect(solvedBoardWithProgress.progress).toBeUndefined();
+    });
+
+    test('Easy 100x100 board is solved', () => {
+      const board = buildBoard(hundredByHundredBoard);
+      board.initializeCandidates();
+      const solvedBoardWithProgress = solveWithBackTracking(board);
+      const solvedCells = solvedBoardWithProgress.board.cells;
+      const solvedValues = solvedCells.map((row) =>
+        row.map((cell) => cell.getValue())
+      );
+      expect(solvedValues).toEqual(solvedHundredByHundredBoard);
+      expect(solvedBoardWithProgress.solved).toEqual(true);
+      expect(solvedBoardWithProgress.progress).toBeUndefined();
     });
 
     test('Already solved board is a no-op', () => {
@@ -45,7 +93,7 @@ describe('solver', () => {
   });
 
   describe('solveWithLogic', () => {
-    test('Solvable board is solved', () => {
+    test('Easy 9x9 board is solved', () => {
       const board = buildBoard(validBoard);
       board.initializeCandidates();
       const solvedBoardWithProgress = solveWithLogic(board);
@@ -54,6 +102,45 @@ describe('solver', () => {
         row.map((cell) => cell.getValue())
       );
       expect(solvedValues).toEqual(solvedBoard);
+      expect(solvedBoardWithProgress.solved).toEqual(true);
+      expect(solvedBoardWithProgress.progress).toBeUndefined();
+    });
+
+    test('Hard 9x9 board is solved', () => {
+      const board = buildBoard(hardNineByNineBoard);
+      board.initializeCandidates();
+      const solvedBoardWithProgress = solveWithLogic(board);
+      const solvedCells = solvedBoardWithProgress.board.cells;
+      const solvedValues = solvedCells.map((row) =>
+        row.map((cell) => cell.getValue())
+      );
+      expect(solvedValues).toEqual(solvedHardNineByNineBoard);
+      expect(solvedBoardWithProgress.solved).toEqual(true);
+      expect(solvedBoardWithProgress.progress).toBeUndefined();
+    });
+
+    test('Evil 9x9 board is solved', () => {
+      const board = buildBoard(evilNineByNineBoard);
+      board.initializeCandidates();
+      const solvedBoardWithProgress = solveWithLogic(board);
+      const solvedCells = solvedBoardWithProgress.board.cells;
+      const solvedValues = solvedCells.map((row) =>
+        row.map((cell) => cell.getValue())
+      );
+      expect(solvedValues).toEqual(solvedEvilNineByNineBoard);
+      expect(solvedBoardWithProgress.solved).toEqual(true);
+      expect(solvedBoardWithProgress.progress).toBeUndefined();
+    });
+
+    test('Easy 100x100 board is solved', () => {
+      const board = buildBoard(hundredByHundredBoard);
+      board.initializeCandidates();
+      const solvedBoardWithProgress = solveWithLogic(board);
+      const solvedCells = solvedBoardWithProgress.board.cells;
+      const solvedValues = solvedCells.map((row) =>
+        row.map((cell) => cell.getValue())
+      );
+      expect(solvedValues).toEqual(solvedHundredByHundredBoard);
       expect(solvedBoardWithProgress.solved).toEqual(true);
       expect(solvedBoardWithProgress.progress).toBeUndefined();
     });

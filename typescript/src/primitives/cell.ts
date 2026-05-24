@@ -194,7 +194,7 @@ export class Cell {
    * Pretty-prints the cell's value, or periods (for each digit) if empty
    */
   print() {
-    const digitsToPad = Math.ceil(this.unitSize / 10);
+    const digitsToPad = this.unitSize.toString().length;
     const valueString = this.value ? this.value.toString() : '';
     const digitsOfValue = this.value ? valueString.length : 0;
 

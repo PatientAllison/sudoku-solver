@@ -330,11 +330,13 @@ export class Board {
         rows.push(this.getHorizontalDivider());
       }
     }
-    return rows.join('\n');
+    // Extra newline for more square boxes on 100x100 and above
+    const separator = this.unitSize.toString().length > 2 ? '\n\n' : '\n';
+    return rows.join(separator);
   }
 
   private getHorizontalDivider() {
-    const cellWidth = Math.ceil(this.unitSize / 10);
+    const cellWidth = this.unitSize.toString().length;
     let divider = '';
     for (let i = 0; i < this.boxEdgeSize; i++) {
       const plusOne = i + 1;
