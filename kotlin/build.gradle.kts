@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.3.20"
+    kotlin("plugin.serialization") version "2.3.20"
     application
     id("org.jlleitschuh.gradle.ktlint") version "12.3.0"
 }
@@ -13,6 +14,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
 }
 
 kotlin {
@@ -25,4 +27,12 @@ tasks.test {
 
 application {
     mainClass.set("dev.patientallison.sudoku.MainKt")
+}
+
+sourceSets {
+    test {
+        resources {
+            srcDir("../resources")
+        }
+    }
 }
