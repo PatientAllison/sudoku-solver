@@ -249,6 +249,19 @@ class HouseTest {
             }
 
             @Test
+            fun `Vertically misaligned box is invalid`() {
+                val cellCoordinates =
+                    (1 until 4).flatMap { row ->
+                        (0 until 3).map { col -> Coordinates(row, col) }
+                    }
+                val exception =
+                    assertFailsWith<IllegalArgumentException> {
+                        House(HouseType.BOX, cellCoordinates)
+                    }
+                assertTrue(exception.message!!.contains("Box is not aligned with the overall board!"))
+            }
+
+            @Test
             fun `Subsequent columns cannot be less than first column`() {
                 val cellCoordinates =
                     (3 until 6).map { Coordinates(0, it) } +
@@ -287,7 +300,6 @@ class HouseTest {
                     assertFailsWith<IllegalArgumentException> {
                         House(HouseType.BOX, cellCoordinates)
                     }
-                print(exception.message)
                 assertTrue(exception.message!!.contains("Cell row is too high to be in the same box as the first row!"))
             }
         }

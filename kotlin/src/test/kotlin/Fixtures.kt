@@ -16,7 +16,7 @@ fun buildCells(values: List<List<Int>>): List<List<Cell>> {
         rowValues.mapIndexed { col, value ->
             Cell(
                 coordinates = Coordinates(row, col),
-                unitSize = unitSize,
+                houseSize = unitSize,
                 givenValue = if (value != 0) value else null,
             )
         }

@@ -7,30 +7,52 @@ import dev.patientallison.sudoku.isPositiveSquare
 /**
  * Creates a Cell, performing appropriate validations for  along the way
  * @param coordinates Coordinates of the Cell within the Board
- * @param unitSize Size of a unit for the board (used in calculating candidates and cloning)
+ * @param houseSize Size of a house for the board (used in calculating candidates and cloning)
  * @throws IllegalArgumentException if the house is invalid somehow
  */
 class Cell(
     val coordinates: Coordinates,
-    private val unitSize: Int,
+    private val houseSize: Int,
     givenValue: Int? = null,
 ) {
     val isGiven = givenValue != null
-    var value = givenValue
-    var candidates: MutableSet<Int>
+    private var value = givenValue
+    private var candidates: MutableSet<Int>
 
     init {
-        require(isPositiveSquare(unitSize)) { "Unit size must be a square positive integer! Unit size: $unitSize" }
+        require(isPositiveSquare(houseSize)) { "Unit size must be a square positive integer! Unit size: $houseSize" }
         require(
-            coordinates.col < unitSize,
-        ) { "Column is greater than or equal to unit size! Column: ${coordinates.col}, Unit size: $unitSize" }
-        require(coordinates.row < unitSize) { "Row is greater than or equal to unit size! Row: ${coordinates.row}, Unit size: $unitSize" }
+            coordinates.col < houseSize,
+        ) { "Column is greater than or equal to unit size! Column: ${coordinates.col}, Unit size: $houseSize" }
+        require(coordinates.row < houseSize) { "Row is greater than or equal to unit size! Row: ${coordinates.row}, Unit size: $houseSize" }
 
-        candidates = (1..unitSize).toMutableSet()
+        candidates = (1..houseSize).toMutableSet()
 
         if (givenValue != null) {
             setValue(givenValue)
         }
+    }
+
+    fun getValue(): Int? {
+        return value
+    }
+
+    fun getCandidates(): Set<Int> {
+        return candidates
+    }
+
+    fun clone(): Cell {
+        val cloned =
+            Cell(
+                Coordinates(coordinates.row, coordinates.col),
+                houseSize,
+                if (isGiven) value else null,
+            )
+
+        val clonedValue = value
+        if (clonedValue != null && !isGiven) cloned.setValue(clonedValue)
+        cloned.candidates = candidates.toMutableSet()
+        return cloned
     }
 
     fun removeCandidate(valueToRemove: Int) {
@@ -52,9 +74,9 @@ class Cell(
                 "Your Value: $newValue"
         }
 
-        require(newValue <= unitSize) {
+        require(newValue <= houseSize) {
             "Cannot set a value larger than the unit size! " +
-                "Unit Size: $unitSize " +
+                "Unit Size: $houseSize " +
                 "Your Value: $newValue"
         }
 

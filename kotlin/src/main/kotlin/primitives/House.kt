@@ -76,6 +76,7 @@ class House(
                 when (houseType) {
                     HouseType.ROW -> HouseType.COLUMN
                     HouseType.COLUMN -> HouseType.ROW
+                    // This is unreachable but the compiler requires it
                     else -> throw IllegalArgumentException(
                         "This function is only meant to be used with rows and columns! Given house type: $houseType",
                     )
