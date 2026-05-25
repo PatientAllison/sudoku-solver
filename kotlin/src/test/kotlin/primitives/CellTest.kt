@@ -1,5 +1,6 @@
 package primitives
 
+import assertClonedCellEqualsOriginal
 import dev.patientallison.sudoku.Coordinates
 import dev.patientallison.sudoku.primitives.Cell
 import org.junit.jupiter.api.Nested
@@ -180,7 +181,7 @@ class CellTest {
             val original = Cell(coordinates, houseSize)
             val clone = original.clone()
 
-            assertCloneEqualsOriginal(original, clone)
+            assertClonedCellEqualsOriginal(original, clone)
             assertFalse(clone.isGiven)
             assertNull(clone.getValue())
         }
@@ -190,7 +191,7 @@ class CellTest {
             val original = Cell(coordinates, houseSize, givenValue)
             val clone = original.clone()
 
-            assertCloneEqualsOriginal(original, clone)
+            assertClonedCellEqualsOriginal(original, clone)
             assertTrue(clone.isGiven)
             assertNotNull(clone.getValue())
         }
@@ -202,7 +203,7 @@ class CellTest {
             original.removeCandidate(candidateToRemove)
             val clone = original.clone()
 
-            assertCloneEqualsOriginal(original, clone)
+            assertClonedCellEqualsOriginal(original, clone)
             assertFalse(clone.getCandidates().contains(candidateToRemove))
         }
 
@@ -240,14 +241,4 @@ class CellTest {
             assertTrue(clone.getCandidates().size > 1)
         }
     }
-}
-
-fun assertCloneEqualsOriginal(
-    original: Cell,
-    clone: Cell,
-) {
-    assertEquals(original.coordinates, clone.coordinates)
-    assertEquals(original.getValue(), clone.getValue())
-    assertEquals(original.getCandidates(), clone.getCandidates())
-    assertEquals(original.isGiven, clone.isGiven)
 }

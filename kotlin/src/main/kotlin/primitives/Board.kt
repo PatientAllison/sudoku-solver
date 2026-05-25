@@ -47,4 +47,9 @@ class Board(
 
         return listOf(rowHouses, colHouses, boxHouses).flatten()
     }
+
+    fun clone(): Board {
+        val clonedCells = cells.map { row -> row.map { it.clone() } }
+        return Board(clonedCells)
+    }
 }

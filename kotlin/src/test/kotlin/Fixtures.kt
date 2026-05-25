@@ -2,6 +2,7 @@ import dev.patientallison.sudoku.Coordinates
 import dev.patientallison.sudoku.primitives.Board
 import dev.patientallison.sudoku.primitives.Cell
 import kotlinx.serialization.json.Json
+import kotlin.test.assertEquals
 
 val valid9x9 = loadBoard("/puzzleInputs/9x9/easy/0.json")
 
@@ -25,4 +26,14 @@ fun buildCells(values: List<List<Int>>): List<List<Cell>> {
 
 fun buildBoard(values: List<List<Int>>): Board {
     return Board(buildCells(values))
+}
+
+fun assertClonedCellEqualsOriginal(
+    original: Cell,
+    clone: Cell,
+) {
+    assertEquals(original.coordinates, clone.coordinates)
+    assertEquals(original.getValue(), clone.getValue())
+    assertEquals(original.getCandidates(), clone.getCandidates())
+    assertEquals(original.isGiven, clone.isGiven)
 }
