@@ -52,4 +52,8 @@ class Board(
         val clonedCells = cells.map { row -> row.map { it.clone() } }
         return Board(clonedCells)
     }
+
+    fun getCellsForHouse(house: House): List<Cell> {
+        return house.cellCoordinates.map { cells[it.row][it.col] }
+    }
 }

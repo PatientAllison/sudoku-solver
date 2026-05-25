@@ -119,7 +119,7 @@ class BoardTest {
         fun `Clone operations do not affect original`() {
             val original = buildBoard(valid9x9)
             val clone = original.clone()
-            clone.cells[0][0].setValue(3);
+            clone.cells[0][0].setValue(3)
             assertNull(original.cells[0][0].getValue())
         }
 
@@ -127,8 +127,24 @@ class BoardTest {
         fun `Original operations do not affect clone`() {
             val original = buildBoard(valid9x9)
             val clone = original.clone()
-            original.cells[0][0].setValue(3);
+            original.cells[0][0].setValue(3)
             assertNull(clone.cells[0][0].getValue())
+        }
+    }
+
+    @Nested
+    inner class GetCellsForHouse {
+        @Test
+        fun `getCellsForHouse returns accurate cells`() {
+            val board = buildBoard(valid9x9)
+            val houses = board.houses
+            houses.forEach {
+                val cellsForHouse = board.getCellsForHouse(it)
+                val coordsForHouse = it.cellCoordinates
+                coordsForHouse.zip(cellsForHouse).forEach { (coordinates, cell) ->
+                    assertEquals(cell.coordinates, coordinates)
+                }
+            }
         }
     }
 }
