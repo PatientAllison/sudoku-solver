@@ -241,4 +241,19 @@ class CellTest {
             assertTrue(clone.getCandidates().size > 1)
         }
     }
+
+    @Nested
+    inner class ToString {
+        @Test
+        fun `With value`() {
+            val cell = Cell(coordinates, houseSize, givenValue)
+            assertEquals("{ Row: ${cell.coordinates.row}, Column: ${cell.coordinates.col}, Value: ${cell.getValue()} }", cell.toString())
+        }
+
+        @Test
+        fun `Without value`() {
+            val cell = Cell(coordinates, houseSize)
+            assertEquals("{ Row: ${cell.coordinates.row}, Column: ${cell.coordinates.col}, Value: 0 }", cell.toString())
+        }
+    }
 }

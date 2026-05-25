@@ -303,5 +303,26 @@ class HouseTest {
                 assertTrue(exception.message!!.contains("Cell row is too high to be in the same box as the first row!"))
             }
         }
+
+        @Nested
+        inner class ToString {
+            @Test
+            fun row() {
+                val row = House(HouseType.ROW, validRow)
+                assertEquals("{ HouseType: ROW, Row: 0 }", row.toString())
+            }
+
+            @Test
+            fun column() {
+                val col = House(HouseType.COLUMN, validCol)
+                assertEquals("{ HouseType: COLUMN, Column: 0 }", col.toString())
+            }
+
+            @Test
+            fun box() {
+                val box = House(HouseType.BOX, validBox)
+                assertEquals("{ HouseType: BOX, Row: 0, Column: 0 }", box.toString())
+            }
+        }
     }
 }

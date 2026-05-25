@@ -91,4 +91,6 @@ class Cell(
         candidates = mutableSetOf(newValue)
         // No-op if value is the same
     }
+
+    override fun toString() = "{ Row: ${coordinates.row}, Column: ${coordinates.col}, Value: ${value ?: 0} }"
 }

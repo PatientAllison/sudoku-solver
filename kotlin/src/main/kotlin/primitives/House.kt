@@ -147,4 +147,12 @@ class House(
 
         return sortedCells
     }
+
+    override fun toString(): String {
+        val houseTypeString = "HouseType: ${houseType.name}"
+        val rowString = if (houseType != HouseType.COLUMN) ", Row: ${topLeftIndex.row}" else ""
+        val colString = if (houseType != HouseType.ROW) ", Column: ${topLeftIndex.col}" else ""
+
+        return "{ $houseTypeString$rowString$colString }"
+    }
 }
