@@ -1,10 +1,7 @@
 import { Coordinates, UnitType } from '../types.js';
 import { isSquarePositiveInteger } from '../utils.js';
 import { Cell } from './cell.js';
-import { Box } from './units/box.js';
-import { Column } from './units/column.js';
-import { Row } from './units/row.js';
-import { Unit } from './units/unit.js';
+import { Unit } from './unit.js';
 
 /**
  * Params for constructing a Board
@@ -21,7 +18,7 @@ export class Board {
   readonly boxEdgeSize: number;
   // Unit size for easy lookup
   readonly unitSize: number;
-  // Total board size for easy lookup
+  // Total board size for easy lookupc
   readonly totalBoardSize: number;
   // Cells contained within the board
   readonly cells: Cell[][];
@@ -36,24 +33,35 @@ export class Board {
       throw new Error(`Height is not a square! Given height: ${cells.length}`);
     }
 
-    // We already validated this was a positive integer above, non-null access is safe
-    if (!isSquarePositiveInteger(cells[0]!.length)) {
-      throw new Error(
-        `Width is not a square! Given width: ${cells[0]!.length}`
-      );
-    }
+    let width: number | undefined;
+    cells.forEach((row) => {
+      if (width !== undefined && width !== row.length) {
+        throw new Error(
+          'All rows must be the same width! ' +
+            `Previous width: ${width} ` +
+            `Current width: ${width}`
+        );
+      }
 
-    if (cells.length !== cells[0]!.length) {
-      throw new Error(
-        'Width and height are not the same! Board is not a square! ' +
-          `Height: ${cells.length} ` +
-          `Width: ${cells[0]!.length}`
-      );
-    }
+      if (!isSquarePositiveInteger(row.length)) {
+        throw new Error(`Width is not a square! Given width: ${row.length}`);
+      }
+
+      if (cells.length !== row.length) {
+        throw new Error(
+          'Width and height are not the same! Board is not a square! ' +
+            `Height: ${cells.length} ` +
+            `Width: ${row.length}`
+        );
+      }
+
+      width = row.length;
+    });
 
     this.boxEdgeSize = Math.sqrt(cells.length);
     this.unitSize = cells.length;
-    this.totalBoardSize = cells.length * cells[0]!.length;
+    // Width is guaranteed to be assigned by this point so this non-null assertion is safe
+    this.totalBoardSize = cells.length * width!;
     this.cells = cells;
     this.units = this.buildUnits();
   }
@@ -97,15 +105,15 @@ export class Board {
     const units: Unit[] = [];
 
     for (const row of rowCoords) {
-      units.push(new Row({ cellCoords: row }));
+      units.push(new Unit({ unitType: UnitType.Row, cellCoords: row }));
     }
 
     for (const col of colCoords) {
-      units.push(new Column({ cellCoords: col }));
+      units.push(new Unit({ unitType: UnitType.Column, cellCoords: col }));
     }
 
     for (const box of boxCoords) {
-      units.push(new Box({ cellCoords: box }));
+      units.push(new Unit({ unitType: UnitType.Box, cellCoords: box }));
     }
 
     return units;
@@ -120,20 +128,6 @@ export class Board {
       row.map((cell) => cell.clone())
     );
     return new Board({ cells: clonedCells });
-  }
-
-  public getRows() {
-    return this.units.filter((unit) => unit.unitType === UnitType.Row) as Row[];
-  }
-
-  public getColumns() {
-    return this.units.filter(
-      (unit) => unit.unitType === UnitType.Column
-    ) as Column[];
-  }
-
-  public getBoxes() {
-    return this.units.filter((unit) => unit.unitType === UnitType.Box) as Box[];
   }
 
   /**'

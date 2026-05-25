@@ -1,5 +1,5 @@
-import { Coordinates, UnitType } from '../../types.js';
-import { isSquarePositiveInteger } from '../../utils.js';
+import { Coordinates, UnitType } from '../types.js';
+import { isSquarePositiveInteger } from '../utils.js';
 
 /**
  * Params for constructing a unit

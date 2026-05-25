@@ -103,6 +103,7 @@ export const wideBoard = validBoard.slice(1);
 export const tallBoard = validBoard.map((row) => row.slice(1));
 // 4x9 board: both sides are square individually, but sides don't match
 export const nonSquareBoard = wideBoard.map((row) => row.slice(5));
+export const unevenBoard = validBoard.with(1, validBoard[1].slice(5));
 
 export const buildCells = (board: number[][]) => {
   const cells: Cell[][] = [];

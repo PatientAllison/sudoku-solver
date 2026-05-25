@@ -21,6 +21,7 @@ import {
   empty16x16Board,
   hundredByHundredBoard,
   solvedHundredByHundredBoard,
+  unevenBoard,
 } from '../fixtures';
 import { Board } from '../../src/primitives/board';
 import { Cell } from '../../src/primitives/cell';
@@ -60,9 +61,13 @@ describe('Board', () => {
       expect(board.cells).toEqual(validCells);
       // Unit assertions
       expect(board.units.length).toEqual(validCells.length * 3);
-      const rows = board.getRows();
-      const cols = board.getColumns();
-      const boxes = board.getBoxes();
+      const rows = board.units.filter((unit) => unit.unitType === UnitType.Row);
+      const cols = board.units.filter(
+        (unit) => unit.unitType === UnitType.Column
+      );
+      const boxes = board.units.filter(
+        (unit) => unit.unitType === UnitType.Box
+      );
       for (const filteredUnits of [rows, cols, boxes]) {
         expect(filteredUnits.length).toEqual(validCells.length);
       }
@@ -105,6 +110,13 @@ describe('Board', () => {
         /Width and height are not the same! Board is not a square!/
       );
     });
+
+    test('Widths not equal board', () => {
+      const cells = buildCells(unevenBoard);
+      expect(() => new Board({ cells })).toThrow(
+        /All rows must be the same width!/
+      );
+    });
   });
 
   describe('clone', () => {
@@ -115,11 +127,7 @@ describe('Board', () => {
       expect(clone.unitSize).toEqual(board.unitSize);
       expect(clone.totalBoardSize).toEqual(clone.totalBoardSize);
       expect(JSON.stringify(clone.cells)).toEqual(JSON.stringify(board.cells));
-      // Unit assertions
       expect(clone.units).toEqual(board.units);
-      expect(clone.getRows()).toEqual(board.getRows());
-      expect(clone.getColumns()).toEqual(board.getColumns());
-      expect(clone.getBoxes()).toEqual(board.getBoxes());
     });
 
     test('clone operations do not affect original', () => {
