@@ -8,14 +8,17 @@ import colConflict
 import dev.patientallison.sudoku.HouseType
 import dev.patientallison.sudoku.exceptions.IllegalBoardException
 import dev.patientallison.sudoku.primitives.Board
+import fullButInvalid
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertDoesNotThrow
 import rowConflict
+import solved9x9
 import valid9x9
 import kotlin.math.sqrt
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertFalse
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
@@ -189,6 +192,48 @@ class BoardTest {
                     board.validate()
                 }
             assertTrue(exception.message!!.contains("Board is invalid! Violations: [ { Violated House: { HouseType: BOX"))
+        }
+    }
+
+    @Nested
+    inner class IsFilled {
+        @Test
+        fun `Returns false for in-progress board`() {
+            val board = buildBoard(valid9x9)
+            assertFalse(board.isFilled())
+        }
+
+        @Test
+        fun `Returns true for full but invalid board`() {
+            val board = buildBoard(fullButInvalid)
+            assertTrue(board.isFilled())
+        }
+
+        @Test
+        fun `Returns true for solved board`() {
+            val board = buildBoard(solved9x9)
+            assertTrue(board.isFilled())
+        }
+    }
+
+    @Nested
+    inner class IsSolved {
+        @Test
+        fun `Returns false for in-progress board`() {
+            val board = buildBoard(valid9x9)
+            assertFalse(board.isSolved())
+        }
+
+        @Test
+        fun `Returns false for full but invalid board`() {
+            val board = buildBoard(fullButInvalid)
+            assertFalse(board.isSolved())
+        }
+
+        @Test
+        fun `Returns true for solved board`() {
+            val board = buildBoard(solved9x9)
+            assertTrue(board.isSolved())
         }
     }
 }

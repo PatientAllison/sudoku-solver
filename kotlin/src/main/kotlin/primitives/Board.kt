@@ -49,15 +49,27 @@ class Board(
         return listOf(rowHouses, colHouses, boxHouses).flatten()
     }
 
+    /**
+     * Clones the board for use in backtracking
+     * @returns A cloned board
+     */
     fun clone(): Board {
         val clonedCells = cells.map { row -> row.map { it.clone() } }
         return Board(clonedCells)
     }
 
+    /**
+     * Returns cells belonging to a House
+     * @returns cells belonging to a House
+     */
     fun getCellsForHouse(house: House): List<Cell> {
         return house.cellCoordinates.map { cells[it.row][it.col] }
     }
 
+    /**'
+     * Validates that the current board state is valid
+     * @throws IllegalBoardException A list of board violations
+     */
     fun validate() {
         val violations = mutableMapOf<House, List<Cell>>()
 
@@ -82,5 +94,25 @@ class Board(
                 }
             throw IllegalBoardException("Board is invalid! Violations: [ ${stringifiedViolations.joinToString(", ")} ]")
         }
+    }
+
+    /**
+     * Determines if every cell in the board has a value. Does not check validity
+     * @returns if the board is already filled
+     */
+    fun isFilled() = cells.flatten().all { it.getValue() != null }
+
+    /**
+     * Determines if the board is already solved
+     * @returns If the board is solved or not
+     */
+    fun isSolved(): Boolean {
+        try {
+            validate()
+        } catch (e: IllegalBoardException) {
+            return false
+        }
+
+        return isFilled()
     }
 }
