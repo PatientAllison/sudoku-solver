@@ -5,6 +5,9 @@ import kotlinx.serialization.json.Json
 import kotlin.test.assertEquals
 
 val valid9x9 = loadBoard("/puzzleInputs/9x9/easy/0.json")
+val rowConflict = loadBoard("/testData/conflicts/rowConflict.json")
+val colConflict = loadBoard("/testData/conflicts/columnConflict.json")
+val boxConflict = loadBoard("/testData/conflicts/boxConflict.json")
 
 private fun loadBoard(path: String): List<List<Int>> {
     val json = object {}::class.java.getResource(path)!!.readText()

@@ -2,6 +2,7 @@ package dev.patientallison.sudoku.primitives
 
 import dev.patientallison.sudoku.Coordinates
 import dev.patientallison.sudoku.HouseType
+import dev.patientallison.sudoku.exceptions.IllegalBoardException
 import dev.patientallison.sudoku.isPositiveSquare
 import kotlin.math.sqrt
 
@@ -55,5 +56,31 @@ class Board(
 
     fun getCellsForHouse(house: House): List<Cell> {
         return house.cellCoordinates.map { cells[it.row][it.col] }
+    }
+
+    fun validate() {
+        val violations = mutableMapOf<House, List<Cell>>()
+
+        houses.forEach { house ->
+            val cells = getCellsForHouse(house)
+            val duplicates =
+                cells
+                    .filter { it.getValue() != null }
+                    .groupBy { it.getValue()!! }
+                    .filter { it.value.size > 1 }
+
+            duplicates.values.forEach {
+                if (it.size > 1) violations[house] = it
+            }
+        }
+
+        if (violations.isNotEmpty()) {
+            val stringifiedViolations =
+                violations.entries.map { entry ->
+                    val stringifiedCells = entry.value.map { it.toString() }.joinToString(", ")
+                    "{ Violated House: ${entry.key}, Violated Cells: $stringifiedCells"
+                }
+            throw IllegalBoardException("Board is invalid! Violations: [ ${stringifiedViolations.joinToString(", ")} ]")
+        }
     }
 }

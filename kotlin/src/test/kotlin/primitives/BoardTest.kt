@@ -1,11 +1,16 @@
 package primitives
 
 import assertClonedCellEqualsOriginal
+import boxConflict
 import buildBoard
 import buildCells
+import colConflict
 import dev.patientallison.sudoku.HouseType
+import dev.patientallison.sudoku.exceptions.IllegalBoardException
 import dev.patientallison.sudoku.primitives.Board
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.assertDoesNotThrow
+import rowConflict
 import valid9x9
 import kotlin.math.sqrt
 import kotlin.test.Test
@@ -145,6 +150,45 @@ class BoardTest {
                     assertEquals(cell.coordinates, coordinates)
                 }
             }
+        }
+    }
+
+    @Nested
+    inner class Validate {
+        @Test
+        fun `Valid board validates successfully`() {
+            val board = buildBoard(valid9x9)
+            assertDoesNotThrow { board.validate() }
+        }
+
+        @Test
+        fun `Row conflict throws error`() {
+            val board = buildBoard(rowConflict)
+            val exception =
+                assertFailsWith<IllegalBoardException> {
+                    board.validate()
+                }
+            assertTrue(exception.message!!.contains("Board is invalid! Violations: [ { Violated House: { HouseType: ROW"))
+        }
+
+        @Test
+        fun `Column conflict throws error`() {
+            val board = buildBoard(colConflict)
+            val exception =
+                assertFailsWith<IllegalBoardException> {
+                    board.validate()
+                }
+            assertTrue(exception.message!!.contains("Board is invalid! Violations: [ { Violated House: { HouseType: COLUMN"))
+        }
+
+        @Test
+        fun `Box conflict throws error`() {
+            val board = buildBoard(boxConflict)
+            val exception =
+                assertFailsWith<IllegalBoardException> {
+                    board.validate()
+                }
+            assertTrue(exception.message!!.contains("Board is invalid! Violations: [ { Violated House: { HouseType: BOX"))
         }
     }
 }
