@@ -2,6 +2,7 @@ package dev.patientallison.sudoku.primitives
 
 import dev.patientallison.sudoku.Coordinates
 import dev.patientallison.sudoku.HouseType
+import dev.patientallison.sudoku.exceptions.BoardFilledException
 import dev.patientallison.sudoku.exceptions.IllegalBoardException
 import dev.patientallison.sudoku.isPositiveSquare
 import kotlin.math.sqrt
@@ -114,5 +115,20 @@ class Board(
         }
 
         return isFilled()
+    }
+
+    /**
+     * Get the empty cell with the fewest candidates (the best cell for use in backtracking)
+     * @returns the empty cell with the fewest candidates
+     * @throws BoardFilledException if the board is already filled and there are no empty cells
+     */
+    fun selectEmptyCell(): Cell {
+        val emptyCells = cells.flatten().filter { it.getValue() == null }
+
+        if (emptyCells.isEmpty()) {
+            throw BoardFilledException("Board is already filled! There are no empty cells!")
+        }
+
+        return emptyCells.minBy { it.getCandidates().size }
     }
 }

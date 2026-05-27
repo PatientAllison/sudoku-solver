@@ -6,6 +6,7 @@ import buildBoard
 import buildCells
 import colConflict
 import dev.patientallison.sudoku.HouseType
+import dev.patientallison.sudoku.exceptions.BoardFilledException
 import dev.patientallison.sudoku.exceptions.IllegalBoardException
 import dev.patientallison.sudoku.primitives.Board
 import fullButInvalid
@@ -19,6 +20,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
@@ -234,6 +236,29 @@ class BoardTest {
         fun `Returns true for solved board`() {
             val board = buildBoard(solved9x9)
             assertTrue(board.isSolved())
+        }
+    }
+
+    @Nested
+    inner class SelectEmptyCell {
+        @Test
+        fun `Selects an empty cell`() {
+            val board = buildBoard(valid9x9)
+            // This is just for coverage so the first cell is not forever the minimum cell
+            board.cells[0][2].removeCandidate(1)
+            // Which cell we get is hard to determine because of the candidate count sorting
+            // Just assert we get a cell
+            assertNotNull(board.selectEmptyCell())
+        }
+
+        @Test
+        fun `Throws if board is filled`() {
+            val board = buildBoard(solved9x9)
+            val exception =
+                assertFailsWith<BoardFilledException> {
+                    board.selectEmptyCell()
+                }
+            assertTrue(exception.message!!.contains("Board is already filled! There are no empty cells!"))
         }
     }
 }
