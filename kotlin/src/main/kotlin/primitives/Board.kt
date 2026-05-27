@@ -148,4 +148,10 @@ class Board(
 
         return cells[coordinates.row][coordinates.col]
     }
+
+    fun getHousesFromCoordinates(coordinates: Coordinates): List<House> {
+        return houses.filter { house ->
+            house.cellCoordinates.any { it.row == coordinates.row && it.col == coordinates.col }
+        }
+    }
 }

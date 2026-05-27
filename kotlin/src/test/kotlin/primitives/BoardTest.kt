@@ -19,6 +19,7 @@ import solved9x9
 import valid9x9
 import kotlin.math.sqrt
 import kotlin.test.Test
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
@@ -306,6 +307,29 @@ class BoardTest {
                     board.getCellFromCoordinates(coordinates)
                 }
             assertTrue(exception.message!!.contains("Requested column is out of bounds for this board!"))
+        }
+    }
+
+    @Nested
+    inner class GetHousesFromCoordinates {
+        @Test
+        fun `3 houses contain coordinates`() {
+            val board = buildBoard(valid9x9)
+            val coordinates = board.cells.flatten().map { it.coordinates }
+            coordinates.forEach { coordinate ->
+                val houses = board.getHousesFromCoordinates(coordinate)
+                // There are exactly 3 units for each Coordinate
+                assertEquals(3, houses.size)
+                val houseTypes = houses.map { it.houseType }
+                // One of each type
+                HouseType.entries.forEach {
+                    assertContains(houseTypes, it)
+                }
+                // And they contain the coordinates
+                houses.forEach {
+                    assertContains(it.cellCoordinates, coordinate)
+                }
+            }
         }
     }
 }
