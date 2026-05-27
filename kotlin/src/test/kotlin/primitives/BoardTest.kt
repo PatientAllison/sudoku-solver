@@ -5,11 +5,13 @@ import boxConflict
 import buildBoard
 import buildCells
 import colConflict
+import dev.patientallison.sudoku.Coordinates
 import dev.patientallison.sudoku.HouseType
 import dev.patientallison.sudoku.exceptions.BoardFilledException
 import dev.patientallison.sudoku.exceptions.IllegalBoardException
 import dev.patientallison.sudoku.primitives.Board
 import fullButInvalid
+import getRandomIndex
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertDoesNotThrow
 import rowConflict
@@ -259,6 +261,51 @@ class BoardTest {
                     board.selectEmptyCell()
                 }
             assertTrue(exception.message!!.contains("Board is already filled! There are no empty cells!"))
+        }
+    }
+
+    @Nested
+    inner class GetCellFromCoordinates {
+        @Test
+        fun `Returns a valid cell`() {
+            val board = buildBoard(valid9x9)
+            val coordinates =
+                Coordinates(
+                    getRandomIndex(board.cells.size),
+                    getRandomIndex(board.cells[0].size),
+                )
+            val cell = board.getCellFromCoordinates(coordinates)
+            assertEquals(coordinates, cell.coordinates)
+        }
+
+        @Test
+        fun `Throws with out of bounds row`() {
+            val board = buildBoard(valid9x9)
+            val coordinates =
+                Coordinates(
+                    board.houseSize,
+                    0,
+                )
+            val exception =
+                assertFailsWith<IllegalArgumentException> {
+                    board.getCellFromCoordinates(coordinates)
+                }
+            assertTrue(exception.message!!.contains("Requested row is out of bounds for this board!"))
+        }
+
+        @Test
+        fun `Throws with out of bounds col`() {
+            val board = buildBoard(valid9x9)
+            val coordinates =
+                Coordinates(
+                    0,
+                    board.houseSize,
+                )
+            val exception =
+                assertFailsWith<IllegalArgumentException> {
+                    board.getCellFromCoordinates(coordinates)
+                }
+            assertTrue(exception.message!!.contains("Requested column is out of bounds for this board!"))
         }
     }
 }

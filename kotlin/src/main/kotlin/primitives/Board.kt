@@ -131,4 +131,21 @@ class Board(
 
         return emptyCells.minBy { it.getCandidates().size }
     }
+
+    /**
+     * Get a cell from Coordinates
+     * @return Cell for the requested Coordinates
+     * @throws IllegalArgumentException if Coordinates are out of bounds for the board
+     */
+    fun getCellFromCoordinates(coordinates: Coordinates): Cell {
+        require(coordinates.row < houseSize) {
+            "Requested row is out of bounds for this board! Requested row: ${coordinates.row}, Max row: $houseSize"
+        }
+
+        require(coordinates.col < houseSize) {
+            "Requested column is out of bounds for this board! Requested column: ${coordinates.col}, Max column: $houseSize"
+        }
+
+        return cells[coordinates.row][coordinates.col]
+    }
 }

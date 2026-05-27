@@ -2,6 +2,7 @@ import dev.patientallison.sudoku.Coordinates
 import dev.patientallison.sudoku.primitives.Board
 import dev.patientallison.sudoku.primitives.Cell
 import kotlinx.serialization.json.Json
+import java.util.Random
 import kotlin.test.assertEquals
 
 val valid9x9 = loadBoard("/puzzleInputs/9x9/easy/0.json")
@@ -42,3 +43,8 @@ fun assertClonedCellEqualsOriginal(
     assertEquals(original.getCandidates(), clone.getCandidates())
     assertEquals(original.isGiven, clone.isGiven)
 }
+
+fun getRandomIndex(
+    max: Int,
+    min: Int = 0,
+): Int = Random().nextInt(min, max)
