@@ -175,4 +175,9 @@ class Board(
             if (value != null) removeCandidatesFromPeers(it.coordinates, value)
         }
     }
+
+    fun getCandidateCount() =
+        cells.flatten().sumOf {
+            if (it.getValue() == null) it.getCandidates().size else 0
+        }
 }

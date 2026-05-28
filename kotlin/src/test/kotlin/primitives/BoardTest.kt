@@ -4,6 +4,7 @@ import assertClonedCellEqualsOriginal
 import boxConflict
 import buildBoard
 import buildCells
+import buildEmptyBoard
 import colConflict
 import dev.patientallison.sudoku.Coordinates
 import dev.patientallison.sudoku.HouseType
@@ -15,7 +16,11 @@ import getRandomIndex
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertDoesNotThrow
 import rowConflict
+import solved16x16
+import solved4x4
 import solved9x9
+import valid16x16
+import valid4x4
 import valid9x9
 import kotlin.math.sqrt
 import kotlin.test.Test
@@ -395,6 +400,47 @@ class BoardTest {
                 peers.forEach {
                     assertFalse(it.getCandidates().contains(cell.getValue()))
                 }
+            }
+        }
+    }
+
+    @Nested
+    inner class GetCandidateCount {
+        @Test
+        fun `Gets count for empty boards`() {
+            val boards =
+                listOf(
+                    buildEmptyBoard(4),
+                    buildEmptyBoard(9),
+                    buildEmptyBoard(16),
+                ).map { buildBoard(it) }
+            boards.forEach {
+                val expected = it.houseSize * it.cells.flatten().size
+                assertEquals(expected, it.getCandidateCount())
+            }
+        }
+
+        @Test
+        fun `Gets count for partial boards`() {
+            val boards = listOf(valid4x4, valid9x9, valid16x16).map { buildBoard(it) }
+            boards.forEach {
+                // Don't bother coming up with precise numbers for each board, just assert a range
+                val max = it.houseSize * it.totalBoardSize
+                val candidateCount = it.getCandidateCount()
+                assertTrue(candidateCount in 0..max)
+            }
+        }
+
+        @Test
+        fun `Gets count for full board`() {
+            val boards =
+                listOf(
+                    solved4x4,
+                    solved9x9,
+                    solved16x16,
+                ).map { buildBoard(it) }
+            boards.forEach {
+                assertEquals(0, it.getCandidateCount())
             }
         }
     }
