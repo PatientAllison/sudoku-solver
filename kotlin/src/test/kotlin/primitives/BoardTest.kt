@@ -354,4 +354,48 @@ class BoardTest {
             }
         }
     }
+
+    @Nested
+    inner class RemoveCandidatesFromPeers {
+        @Test
+        fun `Removes candidates for one cell`() {
+            val board = buildBoard(valid9x9)
+            val cells = board.cells.flatten()
+            // Initial run to remove all candidates from peers
+            board.initializeCandidates()
+
+            val cellToSet = cells[0]
+            val valueToSet = 3
+            val coordinates = cellToSet.coordinates
+
+            // Remove the candidates
+            board.removeCandidatesFromPeers(coordinates, valueToSet)
+
+            // Check that candidates are removed
+            board.getHousesFromCoordinates(coordinates).forEach { house ->
+                house.cellCoordinates.forEach {
+                    val cell = board.getCellFromCoordinates(it)
+                    if (cell !== cellToSet) assertFalse(cell.getCandidates().contains(valueToSet))
+                }
+            }
+        }
+    }
+
+    @Nested
+    inner class InitializeCandidates {
+        @Test
+        fun `Removes candidates from initial board`() {
+            val board = buildBoard(valid9x9)
+            val cells = board.cells.flatten()
+            // Initial run to remove all candidates from peers
+            board.initializeCandidates()
+            // Check that candidates are removed
+            cells.filter { it.getValue() != null }.forEach { cell ->
+                val peers = board.getPeersFromCoordinates(cell.coordinates)
+                peers.forEach {
+                    assertFalse(it.getCandidates().contains(cell.getValue()))
+                }
+            }
+        }
+    }
 }

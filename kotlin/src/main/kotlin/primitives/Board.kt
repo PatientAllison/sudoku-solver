@@ -161,4 +161,18 @@ class Board(
         val otherCoordinates = houseCoordinates.filterNot { it == coordinates }.distinct()
         return otherCoordinates.map { getCellFromCoordinates(it) }
     }
+
+    fun removeCandidatesFromPeers(
+        coordinates: Coordinates,
+        value: Int,
+    ) {
+        getPeersFromCoordinates(coordinates).forEach { it.removeCandidate(value) }
+    }
+
+    fun initializeCandidates() {
+        this.cells.flatten().forEach {
+            val value = it.getValue()
+            if (value != null) removeCandidatesFromPeers(it.coordinates, value)
+        }
+    }
 }
