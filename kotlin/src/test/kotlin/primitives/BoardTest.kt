@@ -23,6 +23,7 @@ import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
+import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -328,6 +329,27 @@ class BoardTest {
                 // And they contain the coordinates
                 houses.forEach {
                     assertContains(it.cellCoordinates, coordinate)
+                }
+            }
+        }
+    }
+
+    @Nested
+    inner class GetPeersFromCoordinates {
+        @Test
+        fun `Returns peers for coordinates`() {
+            val board = buildBoard(valid9x9)
+            val cellCoordinates = board.cells.flatten().map { it.coordinates }
+            cellCoordinates.forEach { coordinates ->
+                val peers = board.getPeersFromCoordinates(coordinates)
+                peers.forEach {
+                    // Peer is not the same cell
+                    assertNotEquals(coordinates, it.coordinates)
+                    // Peer shares at least one house with cell
+                    val cellHouses = board.getHousesFromCoordinates(coordinates).toSet()
+                    val peerHouses = board.getHousesFromCoordinates(it.coordinates).toSet()
+                    val intersection = cellHouses.intersect(peerHouses)
+                    assertTrue(intersection.isNotEmpty())
                 }
             }
         }

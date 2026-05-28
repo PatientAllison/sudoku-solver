@@ -154,4 +154,11 @@ class Board(
             house.cellCoordinates.any { it.row == coordinates.row && it.col == coordinates.col }
         }
     }
+
+    fun getPeersFromCoordinates(coordinates: Coordinates): List<Cell> {
+        val housesForCell = getHousesFromCoordinates(coordinates)
+        val houseCoordinates = housesForCell.flatMap { it.cellCoordinates }
+        val otherCoordinates = houseCoordinates.filterNot { it == coordinates }.distinct()
+        return otherCoordinates.map { getCellFromCoordinates(it) }
+    }
 }
