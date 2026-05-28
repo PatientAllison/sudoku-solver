@@ -1,7 +1,7 @@
 package dev.patientallison.sudoku.primitives
 
-import dev.patientallison.sudoku.Coordinates
 import dev.patientallison.sudoku.HouseType
+import dev.patientallison.sudoku.data.Coordinates
 import dev.patientallison.sudoku.isPositiveSquare
 import kotlin.math.abs
 import kotlin.math.sqrt

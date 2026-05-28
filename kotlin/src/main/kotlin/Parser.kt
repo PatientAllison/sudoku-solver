@@ -1,5 +1,6 @@
 package dev.patientallison.sudoku
 
+import dev.patientallison.sudoku.data.Coordinates
 import dev.patientallison.sudoku.primitives.Board
 import dev.patientallison.sudoku.primitives.Cell
 import kotlinx.serialization.json.Json

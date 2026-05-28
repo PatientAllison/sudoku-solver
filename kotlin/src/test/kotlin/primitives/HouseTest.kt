@@ -1,7 +1,7 @@
 package primitives
 
-import dev.patientallison.sudoku.Coordinates
 import dev.patientallison.sudoku.HouseType
+import dev.patientallison.sudoku.data.Coordinates
 import dev.patientallison.sudoku.primitives.House
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test

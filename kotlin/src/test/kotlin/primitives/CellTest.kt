@@ -1,7 +1,7 @@
 package primitives
 
 import assertClonedCellEqualsOriginal
-import dev.patientallison.sudoku.Coordinates
+import dev.patientallison.sudoku.data.Coordinates
 import dev.patientallison.sudoku.primitives.Cell
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test

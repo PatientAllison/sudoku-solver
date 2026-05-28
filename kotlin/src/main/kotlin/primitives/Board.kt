@@ -1,7 +1,7 @@
 package dev.patientallison.sudoku.primitives
 
-import dev.patientallison.sudoku.Coordinates
 import dev.patientallison.sudoku.HouseType
+import dev.patientallison.sudoku.data.Coordinates
 import dev.patientallison.sudoku.exceptions.BoardFilledException
 import dev.patientallison.sudoku.exceptions.IllegalBoardException
 import dev.patientallison.sudoku.isPositiveSquare
