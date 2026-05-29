@@ -13,6 +13,10 @@ val easy4x4 = loadBoard("/puzzleInputs/4x4/easy/0.json")
 val easy16x16 = loadBoard("/puzzleInputs/16x16/easy/0.json")
 val easy100x100 = loadBoard("/puzzleInputs/100x100/easy/0.json")
 
+// Puzzles for specific techniques
+val nakedSingleBoard = loadBoard("/testData/techniques/nakedSingle.json")
+val hiddenSingleBoard = loadBoard("/testData/techniques/hiddenSingle.json")
+
 // Conflicting puzzles
 val rowConflict = loadBoard("/testData/conflicts/rowConflict.json")
 val colConflict = loadBoard("/testData/conflicts/columnConflict.json")
