@@ -5,17 +5,22 @@ import kotlinx.serialization.json.Json
 import java.util.Random
 import kotlin.test.assertEquals
 
-val valid9x9 = loadBoard("/puzzleInputs/9x9/easy/0.json")
+// Valid unsolved puzzles
+val easy9x9 = loadBoard("/puzzleInputs/9x9/easy/0.json")
 val hard9x9 = loadBoard("/puzzleInputs/9x9/hard/0.json")
 val evil9x9 = loadBoard("/puzzleInputs/9x9/evil/0.json")
-val valid4x4 = loadBoard("/puzzleInputs/4x4/easy/0.json")
-val valid16x16 = loadBoard("/puzzleInputs/16x16/easy/0.json")
+val easy4x4 = loadBoard("/puzzleInputs/4x4/easy/0.json")
+val easy16x16 = loadBoard("/puzzleInputs/16x16/easy/0.json")
 val easy100x100 = loadBoard("/puzzleInputs/100x100/easy/0.json")
+
+// Conflicting puzzles
 val rowConflict = loadBoard("/testData/conflicts/rowConflict.json")
 val colConflict = loadBoard("/testData/conflicts/columnConflict.json")
 val boxConflict = loadBoard("/testData/conflicts/boxConflict.json")
 val fullButInvalid = loadBoard("/testData/conflicts/invalid.json")
 val unsolvableBoard = loadBoard("/testData/conflicts/unsolvable.json")
+
+// Solved puzzles
 val solved9x9 = loadBoard("/testData/solvedBoards/easy/9x9.json")
 val solvedHard9x9 = loadBoard("/testData/solvedBoards/hard/9x9.json")
 val solvedEvil9x9 = loadBoard("/testData/solvedBoards/evil/9x9.json")

@@ -11,6 +11,9 @@ import dev.patientallison.sudoku.data.Coordinates
 import dev.patientallison.sudoku.exceptions.BoardFilledException
 import dev.patientallison.sudoku.exceptions.IllegalBoardException
 import dev.patientallison.sudoku.primitives.Board
+import easy16x16
+import easy4x4
+import easy9x9
 import fullButInvalid
 import getRandomIndex
 import org.junit.jupiter.api.Nested
@@ -19,9 +22,6 @@ import rowConflict
 import solved16x16
 import solved4x4
 import solved9x9
-import valid16x16
-import valid4x4
-import valid9x9
 import kotlin.math.sqrt
 import kotlin.test.Test
 import kotlin.test.assertContains
@@ -38,7 +38,7 @@ class BoardTest {
     inner class BoardConstruction {
         @Test
         fun `Valid Board`() {
-            val cells = buildCells(valid9x9)
+            val cells = buildCells(easy9x9)
             val board = Board(cells)
             assertEquals(sqrt(cells.size.toDouble()).toInt(), board.boxEdgeSize)
             assertEquals(cells.size, board.houseSize)
@@ -74,7 +74,7 @@ class BoardTest {
 
         @Test
         fun `Wide Board`() {
-            val cells = buildCells(valid9x9).dropLast(1)
+            val cells = buildCells(easy9x9).dropLast(1)
             val exception =
                 assertFailsWith<IllegalArgumentException> {
                     Board(cells)
@@ -84,7 +84,7 @@ class BoardTest {
 
         @Test
         fun `Tall Board`() {
-            val cells = buildCells(valid9x9).map { it.dropLast(1) }
+            val cells = buildCells(easy9x9).map { it.dropLast(1) }
             val exception =
                 assertFailsWith<IllegalArgumentException> {
                     Board(cells)
@@ -94,7 +94,7 @@ class BoardTest {
 
         @Test
         fun `Non-square board`() {
-            val cells = buildCells(valid9x9).map { it.slice(0..3) }
+            val cells = buildCells(easy9x9).map { it.slice(0..3) }
             val exception =
                 assertFailsWith<IllegalArgumentException> {
                     Board(cells)
@@ -104,7 +104,7 @@ class BoardTest {
 
         @Test
         fun `Uneven board`() {
-            val cells = buildCells(valid9x9).toMutableList().apply { this[1] = this[1].slice(0..3) }
+            val cells = buildCells(easy9x9).toMutableList().apply { this[1] = this[1].slice(0..3) }
             val exception =
                 assertFailsWith<IllegalArgumentException> {
                     Board(cells)
@@ -117,7 +117,7 @@ class BoardTest {
     inner class Clone {
         @Test
         fun `Clone should be identical to original after creation`() {
-            val original = buildBoard(valid9x9)
+            val original = buildBoard(easy9x9)
             val clone = original.clone()
             assertEquals(original.boxEdgeSize, clone.boxEdgeSize)
             assertEquals(original.houseSize, clone.houseSize)
@@ -136,7 +136,7 @@ class BoardTest {
 
         @Test
         fun `Clone operations do not affect original`() {
-            val original = buildBoard(valid9x9)
+            val original = buildBoard(easy9x9)
             val clone = original.clone()
             clone.cells[0][0].setValue(3)
             assertNull(original.cells[0][0].getValue())
@@ -144,7 +144,7 @@ class BoardTest {
 
         @Test
         fun `Original operations do not affect clone`() {
-            val original = buildBoard(valid9x9)
+            val original = buildBoard(easy9x9)
             val clone = original.clone()
             original.cells[0][0].setValue(3)
             assertNull(clone.cells[0][0].getValue())
@@ -155,7 +155,7 @@ class BoardTest {
     inner class GetCellsForHouse {
         @Test
         fun `getCellsForHouse returns accurate cells`() {
-            val board = buildBoard(valid9x9)
+            val board = buildBoard(easy9x9)
             val houses = board.houses
             houses.forEach {
                 val cellsForHouse = board.getCellsForHouse(it)
@@ -171,7 +171,7 @@ class BoardTest {
     inner class Validate {
         @Test
         fun `Valid board validates successfully`() {
-            val board = buildBoard(valid9x9)
+            val board = buildBoard(easy9x9)
             assertDoesNotThrow { board.validate() }
         }
 
@@ -210,7 +210,7 @@ class BoardTest {
     inner class IsFilled {
         @Test
         fun `Returns false for in-progress board`() {
-            val board = buildBoard(valid9x9)
+            val board = buildBoard(easy9x9)
             assertFalse(board.isFilled())
         }
 
@@ -231,7 +231,7 @@ class BoardTest {
     inner class IsSolved {
         @Test
         fun `Returns false for in-progress board`() {
-            val board = buildBoard(valid9x9)
+            val board = buildBoard(easy9x9)
             assertFalse(board.isSolved())
         }
 
@@ -252,7 +252,7 @@ class BoardTest {
     inner class SelectEmptyCell {
         @Test
         fun `Selects an empty cell`() {
-            val board = buildBoard(valid9x9)
+            val board = buildBoard(easy9x9)
             // This is just for coverage so the first cell is not forever the minimum cell
             board.cells[0][2].removeCandidate(1)
             // Which cell we get is hard to determine because of the candidate count sorting
@@ -275,7 +275,7 @@ class BoardTest {
     inner class GetCellFromCoordinates {
         @Test
         fun `Returns a valid cell`() {
-            val board = buildBoard(valid9x9)
+            val board = buildBoard(easy9x9)
             val coordinates =
                 Coordinates(
                     getRandomIndex(board.cells.size),
@@ -287,7 +287,7 @@ class BoardTest {
 
         @Test
         fun `Throws with out of bounds row`() {
-            val board = buildBoard(valid9x9)
+            val board = buildBoard(easy9x9)
             val coordinates =
                 Coordinates(
                     board.houseSize,
@@ -302,7 +302,7 @@ class BoardTest {
 
         @Test
         fun `Throws with out of bounds col`() {
-            val board = buildBoard(valid9x9)
+            val board = buildBoard(easy9x9)
             val coordinates =
                 Coordinates(
                     0,
@@ -320,7 +320,7 @@ class BoardTest {
     inner class GetHousesFromCoordinates {
         @Test
         fun `3 houses contain coordinates`() {
-            val board = buildBoard(valid9x9)
+            val board = buildBoard(easy9x9)
             val coordinates = board.cells.flatten().map { it.coordinates }
             coordinates.forEach { coordinate ->
                 val houses = board.getHousesFromCoordinates(coordinate)
@@ -343,7 +343,7 @@ class BoardTest {
     inner class GetPeersFromCoordinates {
         @Test
         fun `Returns peers for coordinates`() {
-            val board = buildBoard(valid9x9)
+            val board = buildBoard(easy9x9)
             val cellCoordinates = board.cells.flatten().map { it.coordinates }
             cellCoordinates.forEach { coordinates ->
                 val peers = board.getPeersFromCoordinates(coordinates)
@@ -364,7 +364,7 @@ class BoardTest {
     inner class RemoveCandidatesFromPeers {
         @Test
         fun `Removes candidates for one cell`() {
-            val board = buildBoard(valid9x9)
+            val board = buildBoard(easy9x9)
             val cells = board.cells.flatten()
             // Initial run to remove all candidates from peers
             board.initializeCandidates()
@@ -390,7 +390,7 @@ class BoardTest {
     inner class InitializeCandidates {
         @Test
         fun `Removes candidates from initial board`() {
-            val board = buildBoard(valid9x9)
+            val board = buildBoard(easy9x9)
             val cells = board.cells.flatten()
             // Initial run to remove all candidates from peers
             board.initializeCandidates()
@@ -422,7 +422,7 @@ class BoardTest {
 
         @Test
         fun `Gets count for partial boards`() {
-            val boards = listOf(valid4x4, valid9x9, valid16x16).map { buildBoard(it) }
+            val boards = listOf(easy4x4, easy9x9, easy16x16).map { buildBoard(it) }
             boards.forEach {
                 // Don't bother coming up with precise numbers for each board, just assert a range
                 val max = it.houseSize * it.totalBoardSize

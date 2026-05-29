@@ -14,7 +14,7 @@ class SolverTest {
         @Test
         fun `Various boards are solved`() {
             mapOf(
-                valid9x9 to solved9x9,
+                easy9x9 to solved9x9,
                 hard9x9 to solvedHard9x9,
                 evil9x9 to solvedEvil9x9,
                 // TODO uncomment this once solveWithLogic is implemented and integrated with solveWithBacktracking, we run OOM without it
