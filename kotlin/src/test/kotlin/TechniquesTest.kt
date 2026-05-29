@@ -1,4 +1,5 @@
 import dev.patientallison.sudoku.data.Coordinates
+import dev.patientallison.sudoku.hiddenSingle
 import dev.patientallison.sudoku.nakedSingle
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
@@ -31,6 +32,36 @@ class TechniquesTest {
 
             board.initializeCandidates()
             val boardWithProgress = nakedSingle(board)
+            // Cell is still not solved, no progress was made
+            assertNull(boardWithProgress.board.getCellFromCoordinates(coordinates).getValue())
+            assertEquals(false, boardWithProgress.progress)
+        }
+    }
+
+    @Nested
+    inner class HiddenSingle {
+        @Test
+        fun `Find hidden single`() {
+            val board = buildBoard(hiddenSingleBoard)
+            val coordinates = Coordinates(0, 0)
+            // Cell is not yet solved
+            assertNull(board.getCellFromCoordinates(coordinates).getValue())
+
+            board.initializeCandidates()
+            val boardWithProgress = hiddenSingle(board)
+            assertNotNull(boardWithProgress.board.getCellFromCoordinates(coordinates).getValue())
+            assertEquals(true, boardWithProgress.progress)
+        }
+
+        @Test
+        fun `Find nothing`() {
+            val board = buildBoard(noSingleBoard)
+            val coordinates = Coordinates(0, 3)
+            // Cell is not yet solved
+            assertNull(board.getCellFromCoordinates(coordinates).getValue())
+
+            board.initializeCandidates()
+            val boardWithProgress = hiddenSingle(board)
             // Cell is still not solved, no progress was made
             assertNull(boardWithProgress.board.getCellFromCoordinates(coordinates).getValue())
             assertEquals(false, boardWithProgress.progress)
