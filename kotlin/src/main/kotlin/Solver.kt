@@ -20,11 +20,30 @@ fun solveWithBackTracking(board: Board): BoardWithProgress {
         clonedCell.setValue(it)
         clonedBoard.removeCandidatesFromPeers(clonedCell.coordinates, it)
         try {
-            return solveWithBackTracking(clonedBoard)
+            return solveWithLogic(clonedBoard)
         } catch (_: Exception) {
             return@forEach
         }
     }
 
     throw UnsolvableBoardException("All candidates exhausted! Board is unsolvable!")
+}
+
+fun solveWithLogic(board: Board): BoardWithProgress {
+    // Check if the board is in a valid state first
+    board.validate()
+    // Check if the board is solved
+    if (board.isFilled()) {
+        return BoardWithProgress(board, null, true)
+    }
+
+    val nakedSingleApplied = nakedSingle(board)
+    if (nakedSingleApplied.progress == true) {
+        return solveWithLogic(nakedSingleApplied.board)
+    }
+    val hiddenSingleApplied = hiddenSingle(board)
+    if (hiddenSingleApplied.progress == true) {
+        return solveWithLogic(hiddenSingleApplied.board)
+    }
+    return solveWithBackTracking(board)
 }

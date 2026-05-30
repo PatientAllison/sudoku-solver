@@ -1,6 +1,7 @@
 import dev.patientallison.sudoku.exceptions.IllegalBoardException
 import dev.patientallison.sudoku.exceptions.UnsolvableBoardException
 import dev.patientallison.sudoku.solveWithBackTracking
+import dev.patientallison.sudoku.solveWithLogic
 import org.junit.jupiter.api.Nested
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -17,8 +18,7 @@ class SolverTest {
                 easy9x9 to solved9x9,
                 hard9x9 to solvedHard9x9,
                 evil9x9 to solvedEvil9x9,
-                // TODO uncomment this once solveWithLogic is implemented and integrated with solveWithBacktracking, we run OOM without it
-                // easy100x100 to solvedEasy100x100,
+                easy100x100 to solvedEasy100x100,
             ).forEach { (key, value) ->
                 val board = buildBoard(key)
                 board.initializeCandidates()
@@ -66,6 +66,65 @@ class SolverTest {
                     solveWithBackTracking(board)
                 }
             assertTrue(exception.message!!.contains("All candidates exhausted! Board is unsolvable!"))
+        }
+    }
+
+    @Nested
+    inner class SolveWithLogic {
+        @Test
+        fun `Various boards are solved`() {
+            mapOf(
+                easy9x9 to solved9x9,
+                hard9x9 to solvedHard9x9,
+                evil9x9 to solvedEvil9x9,
+                easy100x100 to solvedEasy100x100,
+            ).forEach { (key, value) ->
+                val board = buildBoard(key)
+                board.initializeCandidates()
+                val solvedBoardWithProgress = solveWithLogic(board)
+                val solvedCells = solvedBoardWithProgress.board.cells
+                val solvedValues =
+                    solvedCells.map { row ->
+                        row.map { it.getValue() }
+                    }
+                assertEquals(value, solvedValues)
+                assertEquals(solvedBoardWithProgress.solved, true)
+                assertNull(solvedBoardWithProgress.progress)
+            }
+        }
+
+        @Test
+        fun `Already solved board is a no-op`() {
+            val board = buildBoard(solved9x9)
+            val solvedBoardWithProgress = solveWithLogic(board)
+            val solvedCells = solvedBoardWithProgress.board.cells
+            val solvedValues =
+                solvedCells.map { row ->
+                    row.map { it.getValue() }
+                }
+            assertEquals(solved9x9, solvedValues)
+            assertEquals(solvedBoardWithProgress.solved, true)
+            assertNull(solvedBoardWithProgress.progress)
+        }
+
+        @Test
+        fun `Invalid board throws validation error`() {
+            val board = buildBoard(rowConflict)
+            val exception =
+                assertFailsWith<IllegalBoardException> {
+                    solveWithLogic(board)
+                }
+            assertTrue(exception.message!!.contains("Board is invalid!"))
+        }
+
+        @Test
+        fun `Unsolvable but not conflicting board throws illegal board exception`() {
+            val board = buildBoard(unsolvableBoard)
+            val exception =
+                assertFailsWith<IllegalBoardException> {
+                    solveWithLogic(board)
+                }
+            assertTrue(exception.message!!.contains("Board is invalid!"))
         }
     }
 }
