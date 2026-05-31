@@ -97,7 +97,7 @@ class Cell(
      */
     fun print(): String {
         val digitsToPad = houseSize.toString().length
-        val valueString = if (value != null) value.toString() else ""
+        val valueString = value?.toString() ?: ""
         val digitsOfValue = valueString.length
 
         return ".".repeat(digitsToPad - digitsOfValue) + valueString

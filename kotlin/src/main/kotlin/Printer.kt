@@ -6,6 +6,7 @@ private fun convertNsToDisplayedTime(elapsedTime: Long): String {
     val milliseconds = ((elapsedTime / 1_000_000) % 1000).toInt()
     val seconds = (elapsedTime / 1_000_000_000).toInt()
 
+    @Suppress("IntroduceWhenSubject")
     return when {
         seconds == 0 && milliseconds < 2 -> "${elapsedTime}ns"
         seconds == 0 -> "${milliseconds}ms"

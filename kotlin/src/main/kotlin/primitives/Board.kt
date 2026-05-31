@@ -90,7 +90,7 @@ class Board(
         if (violations.isNotEmpty()) {
             val stringifiedViolations =
                 violations.entries.map { entry ->
-                    val stringifiedCells = entry.value.map { it.toString() }.joinToString(", ")
+                    val stringifiedCells = entry.value.joinToString(", ") { it.toString() }
                     "{ Violated House: ${entry.key}, Violated Cells: $stringifiedCells"
                 }
             throw IllegalBoardException("Board is invalid! Violations: [ ${stringifiedViolations.joinToString(", ")} ]")
@@ -110,7 +110,7 @@ class Board(
     fun isSolved(): Boolean {
         try {
             validate()
-        } catch (e: IllegalBoardException) {
+        } catch (_: IllegalBoardException) {
             return false
         }
 
