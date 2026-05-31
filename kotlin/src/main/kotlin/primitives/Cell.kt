@@ -92,5 +92,16 @@ class Cell(
         // No-op if value is the same
     }
 
+    /**
+     * Pretty-prints the cell's value, or periods (for each digit) if empty
+     */
+    fun print(): String {
+        val digitsToPad = houseSize.toString().length
+        val valueString = if (value != null) value.toString() else ""
+        val digitsOfValue = valueString.length
+
+        return ".".repeat(digitsToPad - digitsOfValue) + valueString
+    }
+
     override fun toString() = "{ Row: ${coordinates.row}, Column: ${coordinates.col}, Value: ${value ?: 0} }"
 }

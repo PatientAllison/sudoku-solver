@@ -243,6 +243,47 @@ class CellTest {
     }
 
     @Nested
+    inner class Print {
+        @Test
+        fun `Value with single-digit houseSize`() {
+            val cell = Cell(coordinates, houseSize, givenValue)
+            assertEquals(givenValue.toString(), cell.print())
+        }
+
+        @Test
+        fun `No value with single-digit houseSize`() {
+            val cell = Cell(coordinates, houseSize)
+            assertEquals(".", cell.print())
+        }
+
+        @Test
+        fun `Single-digit value with double-digit houseSize`() {
+            val cell = Cell(coordinates, 16, givenValue)
+            assertEquals(".$givenValue", cell.print())
+        }
+
+        @Test
+        fun `Double-digit value with double-digit houseSize`() {
+            val value = 11
+            val cell = Cell(coordinates, 16, value)
+            assertEquals(value.toString(), cell.print())
+        }
+
+        @Test
+        fun `Ten value with double-digit houseSize`() {
+            val value = 10
+            val cell = Cell(coordinates, 16, value)
+            assertEquals(value.toString(), cell.print())
+        }
+
+        @Test
+        fun `No value with double-digit houseSize`() {
+            val cell = Cell(coordinates, 16)
+            assertEquals("..", cell.print())
+        }
+    }
+
+    @Nested
     inner class ToString {
         @Test
         fun `With value`() {
