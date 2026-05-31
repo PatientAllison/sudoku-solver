@@ -26,7 +26,7 @@ tasks.test {
 }
 
 application {
-    mainClass.set("dev.patientallison.sudoku.MainKt")
+    mainClass.set("dev.patientallison.sudoku.SolveKt")
 }
 
 sourceSets {
