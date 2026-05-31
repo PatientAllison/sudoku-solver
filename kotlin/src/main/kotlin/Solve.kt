@@ -20,10 +20,9 @@ fun main(args: Array<String>) {
 
     board.initializeCandidates()
     val startTime = System.nanoTime()
-    solveWithLogic(board).board
+    val solvedBoard = solveWithLogic(board).board
     val elapsed = System.nanoTime() - startTime
-    println("Board is solved!")
-    println("Time: ${elapsed / 1_000_000}ms")
+    print(printWithTime(solvedBoard, elapsed))
 }
 
 private fun parseArg(
