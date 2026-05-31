@@ -180,4 +180,44 @@ class Board(
         cells.flatten().sumOf {
             if (it.getValue() == null) it.getCandidates().size else 0
         }
+
+    fun prettyPrint(): String {
+        val rows = mutableListOf<String>()
+        (0 until houseSize).forEach { row ->
+            val cellsList = mutableListOf<String>()
+            (0 until houseSize).forEach { col ->
+                val plusOne = col + 1
+                val notAtEnd = plusOne != houseSize
+                var cellString = cells[row][col].print()
+                if (notAtEnd) cellString += " "
+                if (plusOne % boxEdgeSize == 0 && notAtEnd) cellString += "| "
+                cellsList.add(cellString)
+            }
+            rows.add(cellsList.joinToString(""))
+            val plusOne = row + 1
+            val notAtEnd = plusOne != houseSize
+            if (plusOne % boxEdgeSize == 0 && notAtEnd) {
+                rows.add(getHorizontalDivider())
+            }
+        }
+
+        val separator = if (houseSize.toString().length > 2) "\n\n" else "\n"
+        return rows.joinToString(separator)
+    }
+
+    private fun getHorizontalDivider(): String {
+        val cellWidth = houseSize.toString().length
+        val divider = mutableListOf<String>()
+        (0 until boxEdgeSize).forEach {
+            val plusOne = it + 1
+            val isMiddle = it != 0 && plusOne != boxEdgeSize
+            // Add one box worth of divisions
+            var boxDivider = "-".repeat(boxEdgeSize * (cellWidth + 1))
+            // Add one extra to account for the extra space between the vertical divider and the first element
+            if (isMiddle) boxDivider += "-"
+            if (plusOne != boxEdgeSize) boxDivider += "+"
+            divider.add(boxDivider)
+        }
+        return divider.joinToString("")
+    }
 }
