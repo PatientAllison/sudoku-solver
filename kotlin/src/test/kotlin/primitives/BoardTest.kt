@@ -17,6 +17,7 @@ import easy4x4
 import easy9x9
 import fullButInvalid
 import getRandomIndex
+import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertDoesNotThrow
 import rowConflict
@@ -1023,6 +1024,57 @@ class BoardTest {
                 ..3 .82 .32 .93 .92 .22 .86 ... ... .14 | .84 .20 ... .91 .99 .13 .25 .97 ... .53 | .40 .21 .55 ... ..9 .11 .45 .79 .29 .33 | .65 .94 .74 .24 100 .73 .42 ... .98 ... | ... .52 ... .90 ... .70 .31 .35 .85 .49 | .50 .89 .61 ... .75 .80 .38 .95 ... .71 | .59 .12 .77 ... ... .17 .15 ..2 .19 ... | .28 .34 .57 ..6 .66 .87 .30 .23 .69 .78 | .43 .27 ..8 .58 .47 .83 .60 .48 .54 ... | ... ..5 ... ... .68 .51 .72 .44 ... .63
                 """.trimIndent()
             assertEquals(expected, board.prettyPrint())
+        }
+
+        @Nested
+        inner class JsonPrint {
+            @Test
+            fun `Prints solved 9x9 board`() {
+                val board = buildBoard(solved9x9)
+                assertEquals(Json.encodeToString(solved9x9), board.jsonPrint())
+            }
+
+            @Test
+            fun `Prints unsolved 9x9 board`() {
+                val board = buildBoard(easy9x9)
+                assertEquals(Json.encodeToString(easy9x9), board.jsonPrint())
+            }
+
+            @Test
+            fun `Prints solved 4x4 board`() {
+                val board = buildBoard(solved4x4)
+                assertEquals(Json.encodeToString(solved4x4), board.jsonPrint())
+            }
+
+            @Test
+            fun `Prints unsolved 4x4 board`() {
+                val board = buildBoard(easy4x4)
+                assertEquals(Json.encodeToString(easy4x4), board.jsonPrint())
+            }
+
+            @Test
+            fun `Prints solved 16x16 board`() {
+                val board = buildBoard(solved16x16)
+                assertEquals(Json.encodeToString(solved16x16), board.jsonPrint())
+            }
+
+            @Test
+            fun `Prints unsolved 16x16 board`() {
+                val board = buildBoard(easy16x16)
+                assertEquals(Json.encodeToString(easy16x16), board.jsonPrint())
+            }
+
+            @Test
+            fun `Prints solved 100x100 board`() {
+                val board = buildBoard(solvedEasy100x100)
+                assertEquals(Json.encodeToString(solvedEasy100x100), board.jsonPrint())
+            }
+
+            @Test
+            fun `Prints unsolved 100x100 board`() {
+                val board = buildBoard(easy100x100)
+                assertEquals(Json.encodeToString(easy100x100), board.jsonPrint())
+            }
         }
     }
 }

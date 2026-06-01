@@ -5,6 +5,7 @@ import dev.patientallison.sudoku.data.Coordinates
 import dev.patientallison.sudoku.exceptions.BoardFilledException
 import dev.patientallison.sudoku.exceptions.IllegalBoardException
 import dev.patientallison.sudoku.isPositiveSquare
+import kotlinx.serialization.json.Json
 import kotlin.math.sqrt
 
 class Board(
@@ -180,6 +181,14 @@ class Board(
         cells.flatten().sumOf {
             if (it.getValue() == null) it.getCandidates().size else 0
         }
+
+    fun jsonPrint(): String {
+        val result =
+            cells.map { row ->
+                row.map { it.getValue() ?: 0 }
+            }
+        return Json.encodeToString(result)
+    }
 
     fun prettyPrint(): String {
         val rows = mutableListOf<String>()
